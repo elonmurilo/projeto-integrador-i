@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
@@ -13,16 +14,18 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 
+import { Services } from "./pages/services/Services";
+import { Clients } from "./pages/clients/Clients";
+import { Billing } from "./pages/billing/Billing";
+import { Promotions } from "./pages/promotions/Promotions";
+import { Help } from "./pages/help/Help";
+import { Profile } from "./pages/profile/Profile";
+
 const AuthRoutes: React.FC = () => {
   const { user, loading } = useAuth();
 
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
-
-  if (user) {
-    return <Navigate to={"/"} replace />;
-  }
+  if (loading) { return <div>Carregando...</div>; }
+  if (user) { return <Navigate to={"/"} replace />; }
 
   return (
     <Routes>
@@ -38,9 +41,7 @@ const AppRoutes: React.FC = () => {
   const { loading, user } = useAuth();
   console.log("AppRoutes => loading:", loading, "user:", user);
 
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
+  if (loading) { return <div>Carregando...</div>; }
 
   return (
     <Routes>
@@ -52,6 +53,55 @@ const AppRoutes: React.FC = () => {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/servicos"
+        element={
+          <ProtectedRoute>
+            <Services />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/clientes"
+        element={
+          <ProtectedRoute>
+            <Clients />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/faturamento"
+        element={
+          <ProtectedRoute>
+            <Billing />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/promocoes"
+        element={
+          <ProtectedRoute>
+            <Promotions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/ajuda"
+        element={
+          <ProtectedRoute>
+            <Help />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/perfil"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="/auth/*" element={<AuthRoutes />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

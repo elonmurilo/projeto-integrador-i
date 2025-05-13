@@ -1,28 +1,79 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { Container, MenuItem } from "./styles";
-import { LogoutButton } from "../common/Button";
-import { useAuth } from "../../contexts/AuthContext";
+import "./Sidebar.css";
+import {
+  FaHome,
+  FaCalendarAlt,
+  FaUser,
+  FaMoneyBill,
+  FaTags,
+  FaQuestion,
+} from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 export const Sidebar: React.FC = () => {
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const { signOut, user } = useAuth();
-
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/auth/login");
-  };
-
   return (
-    <Container>
-      <MenuItem onClick={() => navigate("/")}>Dashboard</MenuItem>
-      <MenuItem onClick={() => navigate("/profile")}>Perfil</MenuItem>
-      <MenuItem onClick={() => navigate("/settings")}>Configurações</MenuItem>
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <span className="logo-icon">⚙️</span>
+        <span className="logo-text">CleanTrack</span>
+      </div>
 
-      {user && (
-        <LogoutButton onClick={handleLogout}>Sair da Conta</LogoutButton>
-      )}
-    </Container>
+      <ul className="sidebar-menu">
+        <li
+          className={location.pathname === "/" ? "active" : ""}
+          onClick={() => navigate("/")}
+        >
+          <FaHome />
+          <span>Página Inicial</span>
+        </li>
+        <li
+          className={location.pathname === "/servicos" ? "active" : ""}
+          onClick={() => navigate("/servicos")}
+        >
+          <FaCalendarAlt />
+          <span>Serviços</span>
+        </li>
+        <li
+          className={location.pathname.startsWith("/clientes") ? "active" : ""}
+          onClick={() => navigate("/clientes")}
+        >
+          <FaUser />
+          <span>Clientes</span>
+        </li>
+        <li
+          className={location.pathname.startsWith("/faturamento") ? "active" : ""}
+          onClick={() => navigate("/faturamento")}
+        >
+          <FaMoneyBill />
+          <span>Faturamento</span>
+        </li>
+        <li
+          className={location.pathname === "/promocoes" ? "active" : ""}
+          onClick={() => navigate("/promocoes")}
+        >
+          <FaTags />
+          <span>Promoções</span>
+        </li>
+        <li
+          className={location.pathname === "/ajuda" ? "active" : ""}
+          onClick={() => navigate("/ajuda")}
+        >
+          <FaQuestion />
+          <span>Ajuda</span>
+        </li>
+      </ul>
+
+      <div className="sidebar-footer">
+        <img src="/avatar.png" alt="Usuário" className="avatar" />
+        <div className="user-info" onClick={() => navigate("/perfil")} style={{ cursor: "pointer" }}>
+          <div className="name">Edmarcia</div>
+          <div className="role">Administradora</div>
+        </div>
+      </div>
+    </div>
   );
 };

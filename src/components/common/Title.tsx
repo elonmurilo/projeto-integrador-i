@@ -1,8 +1,13 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const Title = styled.h1`
-  font-size: 2.5rem;
-  color: #333;
-  margin-bottom: 2rem;
-  text-align: center;
-`;
+interface TitleProps {
+  children: React.ReactNode;
+}
+
+export const Title: React.FC<TitleProps> = ({ children }) => {
+  return (
+    <h1 className="display-5 text-dark text-center mb-4">
+      {children}
+    </h1>
+  );
+};

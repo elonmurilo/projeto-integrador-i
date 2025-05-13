@@ -1,10 +1,17 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 2rem;
-`;
+interface FormProps extends React.FormHTMLAttributes<HTMLFormElement> {
+  children: React.ReactNode;
+}
+
+export const Form: React.FC<FormProps> = ({ children, className = "", ...props }) => {
+  return (
+    <form
+      className={`d-flex flex-column gap-3 p-4 mx-auto w-100 ${className}`}
+      style={{ maxWidth: "400px" }}
+      {...props}
+    >
+      {children}
+    </form>
+  );
+};

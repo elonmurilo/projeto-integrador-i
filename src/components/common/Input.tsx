@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const Input = styled.input`
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-`;
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+export const Input: React.FC<InputProps> = ({ className = "", ...props }) => {
+  return <input className={`form-control ${className}`} {...props} />;
+};

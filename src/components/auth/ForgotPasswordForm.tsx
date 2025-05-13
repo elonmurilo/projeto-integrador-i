@@ -4,7 +4,7 @@ import { supabase } from "../../config/supabase";
 import { Form } from "../common/Form";
 import { Input } from "../common/Input";
 import { Button } from "../common/Button";
-import { Message } from "../common/Message";
+import { SuccessMessage } from "../common/SuccessMessage";
 import { Link } from "../common/Link";
 
 export const ForgotPasswordForm: React.FC = () => {
@@ -35,7 +35,7 @@ export const ForgotPasswordForm: React.FC = () => {
         onChange={(e) => setEmail(e.target.value)}
       />
       <Button type="submit">Enviar Link de Redefinição</Button>
-      {message && <Message>{message}</Message>}
+      {message && <SuccessMessage>{message}</SuccessMessage>}
       <Link onClick={() => navigate("/auth/login")}>Voltar para o login</Link>
     </Form>
   );

@@ -1,7 +1,13 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const ErrorMessage = styled.div`
-  color: #dc3545;
-  text-align: center;
-  margin-bottom: 1rem;
-`;
+interface ErrorMessageProps {
+  children: React.ReactNode;
+}
+
+export const ErrorMessage: React.FC<ErrorMessageProps> = ({ children }) => {
+  return (
+    <div className="alert alert-danger text-center mb-3" role="alert">
+      {children}
+    </div>
+  );
+};

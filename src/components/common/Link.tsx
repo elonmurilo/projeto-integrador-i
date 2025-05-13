@@ -1,12 +1,16 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const Link = styled.a`
-  color: #007bff;
-  text-decoration: none;
-  text-align: center;
-  cursor: pointer;
+interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  children: React.ReactNode;
+}
 
-  &:hover {
-    text-decoration: underline;
-  }
-`;
+export const Link: React.FC<LinkProps> = ({ children, className = "", ...props }) => {
+  return (
+    <a
+      className={`text-primary text-decoration-none text-center d-block ${className}`}
+      {...props}
+    >
+      {children}
+    </a>
+  );
+};
