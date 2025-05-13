@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../config/supabase";
-import { Button, GoogleButton } from "../common/Button";
-import { ErrorMessage } from "../common/ErrorMessage";
-import { Input } from "../common/Input";
-import { Link } from "../common/Link";
 
 export const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -48,29 +44,76 @@ export const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <Input
-        type="password"
-        placeholder="Senha"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <Button type="submit">Entrar</Button>
-      <GoogleButton type="button" onClick={handleGoogleLogin}>
-        Entrar com Google
-      </GoogleButton>
-      <Link onClick={() => navigate("/auth/forgot-password")}>
-        Esqueceu sua senha?
-      </Link>
-      <Link onClick={() => navigate("/auth/register")}>
-        Não tem uma conta? Cadastre-se
-      </Link>
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
+      <div className="mb-3">
+        <label htmlFor="email" className="form-label">
+          E-mail
+        </label>
+        <input
+          type="email"
+          className="form-control"
+          id="email"
+          placeholder="Digite seu e-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="mb-3">
+        <label htmlFor="password" className="form-label">
+          Senha
+        </label>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          placeholder="Digite sua senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="d-grid gap-2 mb-3">
+        <button type="submit" className="btn btn-primary">
+          Entrar
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-danger"
+          onClick={handleGoogleLogin}
+        >
+          Entrar com Google
+        </button>
+      </div>
+
+      <div className="text-center">
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/auth/forgot-password");
+          }}
+          className="d-block"
+        >
+          Esqueceu sua senha?
+        </a>
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            navigate("/auth/register");
+          }}
+        >
+          Não tem uma conta? Cadastre-se
+        </a>
+      </div>
     </form>
   );
 };

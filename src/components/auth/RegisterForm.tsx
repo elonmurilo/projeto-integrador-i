@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../config/supabase";
-import { Button, GoogleButton } from "../common/Button";
+import { Button } from "../common/Button";
+import { FaGoogle } from "react-icons/fa";
 import { Input } from "../common/Input";
 import { Form } from "../common/Form";
 import { Link } from "../common/Link";
@@ -65,9 +66,9 @@ export const RegisterForm: React.FC = () => {
         onChange={(e) => setConfirmPassword(e.target.value)}
       />
       <Button type="submit">Cadastrar</Button>
-      <GoogleButton type="button" onClick={handleGoogleRegister}>
-        Cadastrar com Google
-      </GoogleButton>
+      <Button type="button" variant="google" onClick={handleGoogleRegister}>
+        <FaGoogle /> Cadastrar com Google
+      </Button>
       <Link onClick={() => navigate("/login")}>
         Já tem uma conta? Faça login
       </Link>

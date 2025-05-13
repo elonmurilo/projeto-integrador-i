@@ -1,9 +1,13 @@
-import { styled } from "styled-components";
+import React from "react";
 
-export const Subtitle = styled.p`
-  font-size: 1.2rem;
-  color: #666;
-  margin-bottom: 3rem;
-  text-align: center;
-  max-width: 600px;
-`;
+interface SubtitleProps {
+  children: React.ReactNode;
+}
+
+export const Subtitle: React.FC<SubtitleProps> = ({ children }) => {
+  return (
+    <p className="text-muted text-center mb-4" style={{ maxWidth: 600 }}>
+      {children}
+    </p>
+  );
+};
