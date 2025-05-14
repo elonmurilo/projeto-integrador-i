@@ -18,7 +18,9 @@ export const Sidebar: React.FC = () => {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
-        <span className="logo-icon">⚙️</span>
+        <span className="logo-icon">
+          <img src="/logo.png" alt="Logo CleanTrack" className="avatar" />
+        </span>
         <span className="logo-text">CleanTrack</span>
       </div>
 
