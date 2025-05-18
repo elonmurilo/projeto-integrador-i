@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import { supabase } from "../../config/supabase";
 
@@ -16,61 +16,91 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
   servicoEditando,
 }) => {
   const [form, setForm] = useState({
+    id_cli: "",
+    id_car: "",
+    data_rea: "",
+    hora_rea: "",
     id_por: "",
-    id_lavserv: "",
+    id_lavserv: [] as string[],
     valor: "",
   });
 
+  const [clientes, setClientes] = useState<any[]>([]);
+  const [carros, setCarros] = useState<any[]>([]);
   const [portes, setPortes] = useState<any[]>([]);
   const [lavagens, setLavagens] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const servico = servicoEditando;
 
   useEffect(() => {
-    const fetchOptions = async () => {
-      const [porteRes, lavagemRes] = await Promise.all([
-        supabase.from("porte").select("id_por, porte").order("id_por"),
-        supabase.from("lavagem_servico").select("id_lavserv, lavtipo").order("id_lavserv"),
+    const fetchData = async () => {
+      const [cliRes, porRes, lavRes] = await Promise.all([
+        supabase.from("clientes").select("id_cli, nome, cpf_cnpj"),
+        supabase.from("porte").select("id_por, porte"),
+        supabase.from("lavagem_servico").select("id_lavserv, lavtipo"),
       ]);
-
-      if (!porteRes.error && porteRes.data) setPortes(porteRes.data);
-      if (!lavagemRes.error && lavagemRes.data) setLavagens(lavagemRes.data);
+      if (!cliRes.error && cliRes.data) setClientes(cliRes.data);
+      if (!porRes.error && porRes.data) setPortes(porRes.data);
+      if (!lavRes.error && lavRes.data) setLavagens(lavRes.data);
     };
-
-    fetchOptions();
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    if (form.id_cli) {
+      supabase
+        .from("carros")
+        .select("id_car, modelo, marca, cor, placas(placa)")
+        .eq("id_cli", form.id_cli)
+        .then(({ data }) => {
+          if (data) setCarros(data);
+        });
+    } else {
+      setCarros([]);
+    }
+  }, [form.id_cli]);
 
   useEffect(() => {
     if (servico) {
       setForm({
+        id_cli: String(servico.id_cli || ""),
+        id_car: String(servico.id_car || ""),
+        data_rea: servico.data_rea || "",
+        hora_rea: servico.hora_rea || "",
         id_por: String(servico.id_por || ""),
-        id_lavserv: String(servico.id_lavserv || ""),
+        id_lavserv: servico.id_lavserv ? [String(servico.id_lavserv)] : [],
         valor: String(servico.valor || ""),
       });
     } else {
       setForm({
+        id_cli: "",
+        id_car: "",
+        data_rea: "",
+        hora_rea: "",
         id_por: "",
-        id_lavserv: "",
+        id_lavserv: [],
         valor: "",
       });
     }
   }, [servico]);
 
-    const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-    ) => {
+  const handleChange = (e: React.ChangeEvent<any>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
-        ...prev,
-        [name]: value,
+      ...prev,
+      [name]: value,
     }));
-    };
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     const payload = {
+      id_cli: Number(form.id_cli),
+      id_car: Number(form.id_car),
+      data_rea: form.data_rea,
+      hora_rea: form.hora_rea,
       id_por: Number(form.id_por),
       id_lavserv: Number(form.id_lavserv),
       valor: parseFloat(form.valor),
@@ -82,7 +112,6 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
           .from("servicos")
           .update(payload)
           .eq("id_serv", servico.id_serv);
-
         if (error) throw error;
       } else {
         const { error } = await supabase.from("servicos").insert([payload]);
@@ -99,12 +128,68 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} size="xl" centered>
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>{servico ? "Editar Serviço" : "Cadastrar Serviço"}</Modal.Title>
+          <Modal.Title>{servico ? "Editar Serviço" : "Novo Serviço"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Nome do cliente</Form.Label>
+                <Form.Select name="id_cli" value={form.id_cli} onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  {clientes.map((c) => (
+                    <option key={c.id_cli} value={c.id_cli}>
+                      {c.nome}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Data do Agendamento</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="data_rea"
+                  value={form.data_rea}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
+          <Row className="mb-3">
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>CPF</Form.Label>
+                <Form.Select name="id_car" value={form.id_car} onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  {carros.map((carro) => (
+                    <option key={carro.id_car} value={carro.id_car}>
+                      {carro.placas?.placa || "Sem placa"} — {carro.marca} {carro.modelo}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+            <Col md={6}>
+              <Form.Group>
+                <Form.Label>Horário do Agendamento</Form.Label>
+                <Form.Control
+                  type="time"
+                  name="hora_rea"
+                  value={form.hora_rea}
+                  onChange={handleChange}
+                  required
+                />
+              </Form.Group>
+            </Col>
+          </Row>
+
           <Row className="mb-3">
             <Col md={6}>
               <Form.Group>
@@ -119,17 +204,29 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
                 </Form.Select>
               </Form.Group>
             </Col>
-            <Col md={6}>
-              <Form.Group>
-                <Form.Label>Tipo de Lavagem</Form.Label>
-                <Form.Select name="id_lavserv" value={form.id_lavserv} onChange={handleChange} required>
-                  <option value="">Selecione</option>
+            <Col md={12}>
+              <Form.Group className="mb-3">
+                <Form.Label>Tipos de Serviço</Form.Label>
+                <div>
                   {lavagens.map((l) => (
-                    <option key={l.id_lavserv} value={l.id_lavserv}>
-                      {l.lavtipo}
-                    </option>
+                    <Form.Check
+                      key={l.id_lavserv}
+                      type="checkbox"
+                      label={l.lavtipo}
+                      value={l.id_lavserv}
+                      checked={form.id_lavserv.includes(String(l.id_lavserv))}
+                      onChange={(e) => {
+                        const selectedId = String(e.target.value);
+                        setForm((prev) => ({
+                          ...prev,
+                          id_lavserv: e.target.checked
+                            ? [...prev.id_lavserv, selectedId]
+                            : prev.id_lavserv.filter((id) => id !== selectedId),
+                        }));
+                      }}
+                    />
                   ))}
-                </Form.Select>
+                </div>
               </Form.Group>
             </Col>
           </Row>
@@ -151,7 +248,7 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
             Cancelar
           </Button>
           <Button type="submit" variant="primary" disabled={loading}>
-            {loading ? <Spinner size="sm" animation="border" /> : "Salvar"}
+            {loading ? <Spinner size="sm" animation="border" /> : "Cadastrar"}
           </Button>
         </Modal.Footer>
       </Form>
