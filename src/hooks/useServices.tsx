@@ -3,6 +3,7 @@ import { supabase } from "../config/supabase";
 
 export const useServices = () => {
   const [totalServices, setTotalServices] = useState<number>(0);
+  const [allServices, setAllServices] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchTotalServices = async () => {
@@ -19,9 +20,28 @@ export const useServices = () => {
     setLoading(false);
   };
 
+  const fetchAllServices = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("services").select("*");
+
+    if (error) {
+      console.error("Erro ao buscar todos os serviços:", error.message);
+    } else {
+      setAllServices(data || []);
+    }
+    setLoading(false);
+  };
+
   useEffect(() => {
     fetchTotalServices();
   }, []);
 
-  return { totalServices, loading, fetchTotalServices };
+  return {
+    totalServices,
+    allServices,
+    loading,
+    fetchTotalServices,
+    fetchAllServices,
+    setAllServices,
+  };
 };

@@ -47,9 +47,9 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         className={!isHomepage ? "container-fluid py-4" : ""}
         style={
           isHomepage
-            ? { paddingLeft: user ? 80 : 0, paddingRight: "60px" }
+            ? { paddingLeft: 80, paddingRight: "60px" }
             : {
-                paddingLeft: user ? 180 : 0,
+                paddingLeft: 180,
                 transition: "margin-left 0.3s ease",
                 paddingRight: "60px",
               }

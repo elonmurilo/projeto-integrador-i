@@ -25,6 +25,8 @@ export const Header: React.FC = () => {
   const { totalServices, loading: loadingTotalServices } = useServices();
   const { totalClients, loading: loadingClients } = useClientsCount();
 
+  const dailyServicesCount = dailyServices.length;
+
   return (
     <div
       className="d-flex justify-content-between align-items-center flex-wrap mb-3"
@@ -49,7 +51,7 @@ export const Header: React.FC = () => {
           <div style={styles.statusTextContainer as React.CSSProperties}>
             <span style={styles.headerTitle}>Total de Serviços Hoje</span>
             <span style={styles.statusNumber}>
-              {loadingDailyServices ? "Carregando..." : dailyServices}
+              {loadingDailyServices ? "Carregando..." : dailyServicesCount}
             </span>
           </div>
         </div>
