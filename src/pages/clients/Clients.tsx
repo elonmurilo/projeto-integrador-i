@@ -1,131 +1,65 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Sidebar } from "../../components/sidebar/Sidebar";
-import { Button, Modal } from "react-bootstrap";
-import { supabase } from "../../config/supabase";
+import { Modal } from "react-bootstrap";
 import { RegisterClientModal } from "../../components/modals/RegisterClientModal";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { Search } from "../../components/common/Search";
+import { useRegisterClient } from "../../hooks/useRegisterClient";
+import { useClients } from "../../hooks/useClients";
 
-export const Clients: React.FC = () => {
+interface ClientsProps {
+  isHomepage?: boolean;
+}
+
+export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
   const { user } = useAuth();
-  const [clients, setClients] = useState<any[]>([]);
-  const [clienteEditando, setClienteEditando] = useState<any | null>(null);
-  const [clienteExcluindo, setClienteExcluindo] = useState<any | null>(null);
-  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalClients, setTotalClients] = useState(0);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOrder, setSortOrder] = useState("nome_asc");
-  const pageSize = 10;
+  const {
+    fetchClients,
+    clients,
+    clienteExcluindo,
+    setClienteExcluindo,
+    loading,
+    currentPage,
+    setCurrentPage,
+    totalClients,
+    searchTerm,
+    setSearchTerm,
+    sortOrder,
+    setSortOrder,
+    deleteClient,
+  } = useClients();
 
-  const fetchClients = async (page: number, search: string = "") => {
-    setLoading(true);
-    const from = (page - 1) * pageSize;
-    const to = from + pageSize - 1;
+  const {
+    showModal,
+    clienteEditando,
+    openRegisterClientModal,
+    closeRegisterClientModal,
+  } = useRegisterClient();
 
-    const orderBy =
-      sortOrder === "recentes"
-        ? { column: "id_cli", ascending: false }
-        : sortOrder === "antigos"
-        ? { column: "id_cli", ascending: true }
-        : { column: "nome", ascending: true };
-
-    const query = supabase
-      .from("clientes")
-      .select(
-        `id_cli, nome, tel1, mail, cpf_cnpj, ende, tel2, 
-         carros (
-           id_car, modelo, marca, ano, cor, id_por,
-           placas (id_pla, placa)
-         )`,
-        { count: "exact" }
-      )
-      .range(from, to)
-      .order(orderBy.column, { ascending: orderBy.ascending });
-
-    if (search) {
-      query.ilike("nome", `%${search}%`);
-    }
-
-    const [{ data, error }, { count }] = await Promise.all([
-      query,
-      supabase
-        .from("clientes")
-        .select("id_cli", { count: "exact", head: true })
-        .ilike("nome", `%${search}%`),
-    ]);
-
-    if (error) {
-      console.error("Erro ao buscar clientes:", error.message);
-    } else {
-      setClients(data || []);
-      setTotalClients(count || 0);
-    }
-
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchClients(currentPage, searchTerm);
-  }, [currentPage, searchTerm, sortOrder]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleEdit = (client: any) => {
-    setClienteEditando(client);
-    setShowModal(true);
-  };
-
-  const handleDelete = async () => {
-    if (!clienteExcluindo) return;
-
-    const id_cli = clienteExcluindo.id_cli;
-    const carros = clienteExcluindo.carros || [];
-    const carro = carros[0];
-
-    try {
-      // Deleta carro
-      if (carro?.id_car) {
-        await supabase.from("carros").delete().eq("id_car", carro.id_car);
-      }
-
-      // Deleta placa
-      if (carro?.placas?.id_pla) {
-        await supabase.from("placas").delete().eq("id_pla", carro.placas.id_pla);
-      }
-
-      // Deleta cliente
-      const { error: errDelete } = await supabase.from("clientes").delete().eq("id_cli", id_cli);
-      if (errDelete) throw errDelete;
-
-      // Atualiza lista
-      fetchClients(currentPage, searchTerm);
-    } catch (error) {
-      console.error("Erro ao excluir cliente:", error);
-    } finally {
-      setShowConfirmDelete(false);
-      setClienteExcluindo(null);
-    }
-  };
-
-  const totalPages = Math.ceil(totalClients / pageSize);
+  const totalPages = Math.ceil(totalClients / 10);
 
   return (
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
 
       <div
-        className="container-fluid py-4"
-        style={{ paddingLeft: user ? 80 : 0, transition: "margin-left 0.3s ease" }}
+        className={!isHomepage ? "container-fluid py-4" : ""}
+        style={
+          isHomepage
+            ? { paddingLeft: user ? 80 : 0, paddingRight: "60px" }
+            : {
+                paddingLeft: user ? 180 : 0,
+                transition: "margin-left 0.3s ease",
+                paddingRight: "60px",
+              }
+        }
       >
-        <h5 className="mb-4" style={{ paddingLeft: 80 }}>
-          Olá {user?.user_metadata?.name || "Usuário"} 👋
-        </h5>
+        {!isHomepage && (
+          <h5 className="mb-4" style={{ paddingLeft: 30 }}>
+            Olá {user?.user_metadata?.name || "Usuário"} 👋
+          </h5>
+        )}
 
         <div
           className="container p-4"
@@ -136,40 +70,39 @@ export const Clients: React.FC = () => {
           }}
         >
           <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            <Button
-              variant="primary"
-              style={{ backgroundColor: "#B197FC", border: "none" }}
-              onClick={() => {
-                setClienteEditando(null);
-                setShowModal(true);
-              }}
-            >
-              Cadastrar Novo Cliente
-            </Button>
+            {!isHomepage ? (
+              <>
+                <h5 className="mb-3">Todos os Clientes</h5>
+                <div
+                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
+                >
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => openRegisterClientModal()}
+                  >
+                    Cadastrar Novo Cliente
+                  </button>
+                  <Search
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    sortOrder={sortOrder}
+                    setSortOrder={setSortOrder}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <h5>Todos os Clientes </h5>
 
-            <div className="d-flex gap-2 mt-2 mt-sm-0">
-              <input
-                type="text"
-                placeholder="🔍 Procurar"
-                className="form-control"
-                value={searchTerm}
-                onChange={handleSearch}
-                style={{ maxWidth: "200px" }}
-              />
-              <select
-                className="form-select"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-                style={{ maxWidth: "150px" }}
-              >
-                <option value="recentes">Recentes</option>
-                <option value="antigos">Antigos</option>
-                <option value="nome_asc">Nome A-Z</option>
-              </select>
-            </div>
+                <Search
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                  sortOrder={sortOrder}
+                  setSortOrder={setSortOrder}
+                />
+              </>
+            )}
           </div>
-
-          <h5 className="mb-3">Todos os Clientes</h5>
 
           <div className="table-responsive">
             <table className="table table-hover table-bordered align-middle">
@@ -180,7 +113,7 @@ export const Clients: React.FC = () => {
                   <th>E-mail</th>
                   <th>Carro</th>
                   <th>Placa</th>
-                  <th>Ações</th>
+                  {!isHomepage ? <th>Ações</th> : null}
                 </tr>
               </thead>
               <tbody>
@@ -208,19 +141,18 @@ export const Clients: React.FC = () => {
                       <td>{client.mail}</td>
                       <td>{client.carros?.[0]?.modelo || "—"}</td>
                       <td>{client.carros?.[0]?.placas?.placa || "—"}</td>
-                      <td className="d-flex gap-2 justify-content-evenly">
-                        <FaEdit
-                          style={{ cursor: "pointer", color: "#6C2BD9" }}
-                          onClick={() => handleEdit(client)}
-                        />
-                        <FaTrash
-                          style={{ cursor: "pointer", color: "#D9534F" }}
-                          onClick={() => {
-                            setClienteExcluindo(client);
-                            setShowConfirmDelete(true);
-                          }}
-                        />
-                      </td>
+                      {!isHomepage ? (
+                        <td className="d-flex gap-2 justify-content-evenly">
+                          <FaEdit
+                            style={{ cursor: "pointer", color: "#6C2BD9" }}
+                            onClick={() => openRegisterClientModal(client)}
+                          />
+                          <FaTrash
+                            style={{ cursor: "pointer", color: "#D9534F" }}
+                            onClick={() => setClienteExcluindo(client)}
+                          />
+                        </td>
+                      ) : null}
                     </tr>
                   ))}
               </tbody>
@@ -234,10 +166,16 @@ export const Clients: React.FC = () => {
             {totalPages > 1 && (
               <nav>
                 <ul className="pagination pagination-sm mb-0">
-                  <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
                     <span
                       className="page-link"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
                       role="button"
                     >
                       ‹
@@ -246,7 +184,9 @@ export const Clients: React.FC = () => {
                   {Array.from({ length: totalPages }, (_, i) => (
                     <li
                       key={i + 1}
-                      className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                      className={`page-item ${
+                        currentPage === i + 1 ? "active" : ""
+                      }`}
                     >
                       <span
                         className="page-link"
@@ -257,10 +197,16 @@ export const Clients: React.FC = () => {
                       </span>
                     </li>
                   ))}
-                  <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
+                  >
                     <span
                       className="page-link"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
                       role="button"
                     >
                       ›
@@ -276,30 +222,37 @@ export const Clients: React.FC = () => {
       {showModal && (
         <RegisterClientModal
           show={showModal}
-          onHide={() => setShowModal(false)}
+          onHide={closeRegisterClientModal}
           onSuccess={() => fetchClients(currentPage, searchTerm)}
           clienteEditando={clienteEditando}
         />
       )}
 
-      <Modal show={showConfirmDelete} onHide={() => setShowConfirmDelete(false)} centered>
+      <Modal
+        show={!!clienteExcluindo}
+        onHide={() => setClienteExcluindo(null)}
+        centered
+      >
         <Modal.Header closeButton className="bg-danger text-white">
           <Modal.Title>Confirmar Exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Tem certeza de que deseja remover o cliente{" "}
-          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser desfeita.
+          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser
+          desfeita.
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmDelete(false)}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => setClienteExcluindo(null)}
+          >
             Cancelar
-          </Button>
-          <Button variant="danger" onClick={handleDelete}>
+          </button>
+          <button className="btn btn-danger" onClick={deleteClient}>
             Confirmar Remoção
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
-
     </div>
   );
 };
