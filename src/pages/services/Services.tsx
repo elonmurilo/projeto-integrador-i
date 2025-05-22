@@ -8,62 +8,89 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 
 export const Services: React.FC = () => {
   const { user } = useAuth();
-  const [services, setServices] = useState<any[]>([]);
+  const [agendamentos, setAgendamentos] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [serviceEditing, setServiceEditing] = useState<any | null>(null);
-
-  const [portes, setPortes] = useState<any>({});
-  const [lavagens, setLavagens] = useState<any>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const pageSize = 10;
 
   const fetchServicos = async () => {
     setLoading(true);
 
-    const [{ data: servicos }, { data: dadosPortes }, { data: dadosLavagens }] = await Promise.all([
-      supabase.from("servicos").select("*"),
-      supabase.from("porte").select("id_por, porte"),
-      supabase.from("lavagem_servico").select("id_lavserv, lavtipo"),
-    ]);
+    const from = (currentPage - 1) * pageSize;
+    const to = from + pageSize - 1;
 
-    if (dadosPortes) {
-      const mapa = Object.fromEntries(dadosPortes.map((p) => [p.id_por, p.porte]));
-      setPortes(mapa);
+    const { data, error, count } = await supabase
+      .from("agenda")
+      .select(`
+        id_rea,
+        data_rea,
+        hora_rea,
+        id_cli,
+        id_car,
+        clientes (id_cli, nome),
+        carros (id_car, modelo, marca, id_por, placas (placa)),
+        servicos (id_serv, id_por, valor),
+        agenda_servico (id_lavserv)
+      `, { count: "exact" })
+      .order("data_rea", { ascending: false })
+      .order("hora_rea", { ascending: false })
+      .range(from, to);
+
+    if (error) {
+      console.error("Erro ao buscar agendamentos:", error);
+    } else {
+      setAgendamentos(data || []);
+      setTotalRecords(count || 0);
     }
 
-    if (dadosLavagens) {
-      const mapa = Object.fromEntries(dadosLavagens.map((l) => [l.id_lavserv, l.lavtipo]));
-      setLavagens(mapa);
-    }
-
-    setServices(servicos || []);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchServicos();
-  }, []);
+  }, [currentPage]);
 
   const handleEdit = (servico: any) => {
     setServiceEditing(servico);
     setShowModal(true);
   };
 
-  const handleDelete = async (servico: any) => {
-    const confirm = window.confirm(`Deseja realmente excluir o serviço para o porte "${portes[servico.id_por]}" e tipo de lavagem "${lavagens[servico.id_lavserv]}"?`);
+  const handleDelete = async (agendamento: any) => {
+    const confirm = window.confirm(`Deseja realmente excluir o serviço agendado para ${agendamento.clientes?.nome}?`);
     if (!confirm) return;
 
-    const { error } = await supabase.from("servicos").delete().eq("id_serv", servico.id_serv);
-    if (error) return alert("Erro ao excluir serviço.");
+    // Exclui a agenda_servico, depois a agenda e o serviço vinculado
+    const { error: errAgendaServico } = await supabase
+      .from("agenda_servico")
+      .delete()
+      .eq("id_rea", agendamento.id_rea);
+
+    if (errAgendaServico) return alert("Erro ao excluir tipos de serviço.");
+
+    const { error: errAgenda } = await supabase
+      .from("agenda")
+      .delete()
+      .eq("id_rea", agendamento.id_rea);
+
+    if (errAgenda) return alert("Erro ao excluir agendamento.");
+
+    const { error: errServico } = await supabase
+      .from("servicos")
+      .delete()
+      .eq("id_serv", agendamento.servicos?.id_serv);
+
+    if (errServico) return alert("Erro ao excluir serviço.");
+
     fetchServicos();
   };
 
   return (
     <div style={{ backgroundColor: "#eef4ff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <div
-        className="container-fluid py-4"
-        style={{ paddingLeft: user ? 80 : 0 }}
-      >
+      <div className="container-fluid py-4" style={{ paddingLeft: user ? 80 : 0 }}>
         <h5 className="mb-4" style={{ paddingLeft: 80 }}>
           Olá {user?.user_metadata?.name || "Usuário"} 👋
         </h5>
@@ -80,34 +107,16 @@ export const Services: React.FC = () => {
             >
               Cadastrar Novo Serviço
             </Button>
-
-            <div className="d-flex gap-2 mt-2 mt-sm-0">
-              <input
-                type="text"
-                placeholder="🔍 Procurar"
-                className="form-control"
-                style={{ maxWidth: "200px" }}
-                disabled
-              />
-              <select
-                className="form-select"
-                style={{ maxWidth: "150px" }}
-                disabled
-              >
-                <option>Ordenar por</option>
-                <option value="porte">Porte</option>
-                <option value="lavagem">Lavagem</option>
-                <option value="valor_asc">Valor ↑</option>
-                <option value="valor_desc">Valor ↓</option>
-              </select>
-            </div>
           </div>
 
           <Table bordered hover>
             <thead className="table-light">
               <tr>
+                <th>Cliente</th>
+                <th>Carro</th>
                 <th>Porte</th>
-                <th>Tipo de Lavagem</th>
+                <th>Data</th>
+                <th>Hora</th>
                 <th>Valor (R$)</th>
                 <th>Ações</th>
               </tr>
@@ -115,38 +124,82 @@ export const Services: React.FC = () => {
             <tbody>
               {loading && (
                 <tr>
-                  <td colSpan={4} className="text-center">
+                  <td colSpan={7} className="text-center">
                     <Spinner animation="border" size="sm" /> Carregando...
                   </td>
                 </tr>
               )}
-              {!loading && services.length === 0 && (
+              {!loading && agendamentos.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="text-center">
-                    Nenhum serviço cadastrado.
-                  </td>
+                  <td colSpan={7} className="text-center">Nenhum serviço agendado.</td>
                 </tr>
               )}
               {!loading &&
-                services.map((servico) => (
-                  <tr key={servico.id_serv}>
-                    <td>{portes[servico.id_por]}</td>
-                    <td>{lavagens[servico.id_lavserv]}</td>
-                    <td>{parseFloat(servico.valor).toFixed(2)}</td>
+                agendamentos.map((a) => (
+                  <tr key={a.id_rea}>
+                    <td>{a.clientes?.nome}</td>
+                    <td>{a.carros?.placas?.placa || "—"} — {a.carros?.marca} {a.carros?.modelo}</td>
+                    <td>{a.carros?.id_por}</td>
+                    <td>{a.data_rea}</td>
+                    <td>{a.hora_rea}</td>
+                    <td>{parseFloat(a.servicos?.valor || 0).toFixed(2)}</td>
                     <td className="d-flex gap-2">
                       <FaEdit
                         style={{ cursor: "pointer", color: "#6C2BD9" }}
-                        onClick={() => handleEdit(servico)}
+                        onClick={() => handleEdit(a)}
                       />
                       <FaTrash
                         style={{ cursor: "pointer", color: "#dc3545" }}
-                        onClick={() => handleDelete(servico)}
+                        onClick={() => handleDelete(a)}
                       />
                     </td>
                   </tr>
                 ))}
             </tbody>
           </Table>
+          {totalRecords > pageSize && (
+            <div className="d-flex justify-content-between align-items-center mt-3">
+              <small>
+                Mostrando {agendamentos.length} de {totalRecords} agendamentos encontrados
+              </small>
+              <nav>
+                <ul className="pagination pagination-sm mb-0">
+                  <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                    <span
+                      className="page-link"
+                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      role="button"
+                    >
+                      ‹
+                    </span>
+                  </li>
+                  {Array.from({ length: Math.ceil(totalRecords / pageSize) }, (_, i) => (
+                    <li
+                      key={i + 1}
+                      className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                    >
+                      <span
+                        className="page-link"
+                        onClick={() => setCurrentPage(i + 1)}
+                        role="button"
+                      >
+                        {i + 1}
+                      </span>
+                    </li>
+                  ))}
+                  <li className={`page-item ${currentPage === Math.ceil(totalRecords / pageSize) ? "disabled" : ""}`}>
+                    <span
+                      className="page-link"
+                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(totalRecords / pageSize)))}
+                      role="button"
+                    >
+                      ›
+                    </span>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          )}
         </div>
       </div>
 
