@@ -1,22 +1,32 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Container } from "./Layout";
-import { Title } from "../../components/common/Title";
-import { Subtitle } from "../../components/common/Subtitle";
 
 import { Sidebar } from "../../components/sidebar/Sidebar";
+
+import { styles } from "./styles";
+import { Header } from "./components/Header";
+import { Clients } from "../clients/Clients";
 
 export const Home: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <Container>
+    <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <Title>Bem-vindo ao CleanTrack</Title>
-      <Subtitle>
-        Gerencie seus clientes e contatos de forma eficiente com nossa
-        plataforma de CRM.
-      </Subtitle>
-    </Container>
+      <div
+        className="container-fluid py-4"
+        style={(styles.container, { paddingLeft: user ? 180 : 0 })}
+      >
+        <div>
+          <h5 className="mb-4" style={{ paddingLeft: 80 }}>
+            Olá {user?.user_metadata?.name || "Usuário"} 👋
+          </h5>
+        </div>
+
+        <Header />
+
+        <Clients isHomepage />
+      </div>
+    </div>
   );
 };

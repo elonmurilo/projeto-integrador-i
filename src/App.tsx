@@ -24,8 +24,12 @@ import { Profile } from "./pages/profile/Profile";
 const AuthRoutes: React.FC = () => {
   const { user, loading } = useAuth();
 
-  if (loading) { return <div>Carregando...</div>; }
-  if (user) { return <Navigate to={"/"} replace />; }
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+  if (user) {
+    return <Navigate to={"/"} replace />;
+  }
 
   return (
     <Routes>
@@ -38,10 +42,11 @@ const AuthRoutes: React.FC = () => {
 };
 
 const AppRoutes: React.FC = () => {
-  const { loading, user } = useAuth();
-  console.log("AppRoutes => loading:", loading, "user:", user);
+  const { loading } = useAuth();
 
-  if (loading) { return <div>Carregando...</div>; }
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <Routes>
