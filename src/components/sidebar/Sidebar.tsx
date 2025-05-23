@@ -9,13 +9,29 @@ import {
   FaQuestion,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { supabase } from "../../config/supabase";
 import { useAuth } from "../../contexts/AuthContext";
 
+import { CiLogout } from "react-icons/ci";
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Erro ao deslogar:", error.message);
+      } else {
+        console.log("Usuário deslogado com sucesso");
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error("Erro inesperado ao deslogar:", err);
+    }
+  };
 
   return (
     <div className="sidebar">
@@ -49,7 +65,9 @@ export const Sidebar: React.FC = () => {
           <span>Clientes</span>
         </li>
         <li
-          className={location.pathname.startsWith("/faturamento") ? "active" : ""}
+          className={
+            location.pathname.startsWith("/faturamento") ? "active" : ""
+          }
           onClick={() => navigate("/faturamento")}
         >
           <FaMoneyBill />
@@ -77,6 +95,7 @@ export const Sidebar: React.FC = () => {
           <div className="name">{user?.user_metadata?.name || "Nome não informado"}</div>
           <div className="role">Administradora</div>
         </div>
+        <CiLogout onClick={handleLogout} />
       </div>
     </div>
   );
