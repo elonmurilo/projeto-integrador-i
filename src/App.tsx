@@ -11,15 +11,15 @@ import { Register } from "./pages/auth/Register";
 import { ForgotPassword } from "./pages/auth/ForgotPassword";
 import { Home } from "./pages/home/Home";
 import { AuthProvider } from "./contexts/AuthContext";
-import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ProtectedRoute } from "./utils/ProtectedRoute";
 import { useAuth } from "./contexts/AuthContext";
 
 import { Services } from "./pages/services/Services";
 import { Clients } from "./pages/clients/Clients";
-import { Billing } from "./pages/billing/Billing";
 import { Promotions } from "./pages/promotions/Promotions";
 import { Help } from "./pages/help/Help";
 import { Profile } from "./pages/profile/Profile";
+import { Income } from "./pages/income/Income";
 
 const AuthRoutes: React.FC = () => {
   const { user, loading } = useAuth();
@@ -78,7 +78,7 @@ const AppRoutes: React.FC = () => {
         path="/faturamento"
         element={
           <ProtectedRoute>
-            <Billing />
+            <Income />
           </ProtectedRoute>
         }
       />
