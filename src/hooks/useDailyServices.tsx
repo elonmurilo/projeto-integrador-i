@@ -18,9 +18,6 @@ export const useDailyServices = () => {
       today.setHours(23, 59, 59, 999) - timezoneOffset
     ).toISOString();
 
-    console.log("Start of Day (Local):", startOfDay);
-    console.log("End of Day (Local):", endOfDay);
-
     const { data, error } = await supabase
       .from("services")
       .select("*")
