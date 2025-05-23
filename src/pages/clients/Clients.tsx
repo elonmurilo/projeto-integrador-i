@@ -49,14 +49,14 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
           isHomepage
             ? { paddingLeft: 80, paddingRight: "60px" }
             : {
-                paddingLeft: 180,
+                paddingLeft: 260,
                 transition: "margin-left 0.3s ease",
                 paddingRight: "60px",
               }
         }
       >
         {!isHomepage && (
-          <h5 className="mb-4" style={{ paddingLeft: 30 }}>
+          <h5 className="mb-4">
             Olá {user?.user_metadata?.name || "Usuário"} 👋
           </h5>
         )}
@@ -237,7 +237,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
           <Modal.Title>Confirmar Exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza de que deseja remover o cliente{" "}
+          Tem certeza de que deseja remover o cliente
           <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser
           desfeita.
         </Modal.Body>

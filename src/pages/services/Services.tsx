@@ -24,7 +24,8 @@ export const Services: React.FC = () => {
 
     const { data, error, count } = await supabase
       .from("agenda")
-      .select(`
+      .select(
+        `
         id_rea,
         data_rea,
         hora_rea,
@@ -34,7 +35,9 @@ export const Services: React.FC = () => {
         carros (id_car, modelo, marca, id_por, placas (placa)),
         servicos (id_serv, id_por, valor),
         agenda_servico (id_lavserv)
-      `, { count: "exact" })
+      `,
+        { count: "exact" }
+      )
       .order("data_rea", { ascending: false })
       .order("hora_rea", { ascending: false })
       .range(from, to);
@@ -59,7 +62,9 @@ export const Services: React.FC = () => {
   };
 
   const handleDelete = async (agendamento: any) => {
-    const confirm = window.confirm(`Deseja realmente excluir o serviço agendado para ${agendamento.clientes?.nome}?`);
+    const confirm = window.confirm(
+      `Deseja realmente excluir o serviço agendado para ${agendamento.clientes?.nome}?`
+    );
     if (!confirm) return;
 
     // Exclui a agenda_servico, depois a agenda e o serviço vinculado
@@ -90,8 +95,8 @@ export const Services: React.FC = () => {
   return (
     <div style={{ backgroundColor: "#eef4ff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <div className="container-fluid py-4" style={{ paddingLeft: user ? 80 : 0 }}>
-        <h5 className="mb-4" style={{ paddingLeft: 80 }}>
+      <div className="container-fluid py-4" style={{ paddingLeft: 260 }}>
+        <h5 className="mb-4">
           Olá {user?.user_metadata?.name || "Usuário"} 👋
         </h5>
 
@@ -131,14 +136,19 @@ export const Services: React.FC = () => {
               )}
               {!loading && agendamentos.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center">Nenhum serviço agendado.</td>
+                  <td colSpan={7} className="text-center">
+                    Nenhum serviço agendado.
+                  </td>
                 </tr>
               )}
               {!loading &&
                 agendamentos.map((a) => (
                   <tr key={a.id_rea}>
                     <td>{a.clientes?.nome}</td>
-                    <td>{a.carros?.placas?.placa || "—"} — {a.carros?.marca} {a.carros?.modelo}</td>
+                    <td>
+                      {a.carros?.placas?.placa || "—"} — {a.carros?.marca}
+                      {a.carros?.modelo}
+                    </td>
                     <td>{a.carros?.id_por}</td>
                     <td>{a.data_rea}</td>
                     <td>{a.hora_rea}</td>
@@ -160,37 +170,59 @@ export const Services: React.FC = () => {
           {totalRecords > pageSize && (
             <div className="d-flex justify-content-between align-items-center mt-3">
               <small>
-                Mostrando {agendamentos.length} de {totalRecords} agendamentos encontrados
+                Mostrando {agendamentos.length} de {totalRecords} agendamentos
+                encontrados
               </small>
               <nav>
                 <ul className="pagination pagination-sm mb-0">
-                  <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
                     <span
                       className="page-link"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
                       role="button"
                     >
                       ‹
                     </span>
                   </li>
-                  {Array.from({ length: Math.ceil(totalRecords / pageSize) }, (_, i) => (
-                    <li
-                      key={i + 1}
-                      className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
-                    >
-                      <span
-                        className="page-link"
-                        onClick={() => setCurrentPage(i + 1)}
-                        role="button"
+                  {Array.from(
+                    { length: Math.ceil(totalRecords / pageSize) },
+                    (_, i) => (
+                      <li
+                        key={i + 1}
+                        className={`page-item ${
+                          currentPage === i + 1 ? "active" : ""
+                        }`}
                       >
-                        {i + 1}
-                      </span>
-                    </li>
-                  ))}
-                  <li className={`page-item ${currentPage === Math.ceil(totalRecords / pageSize) ? "disabled" : ""}`}>
+                        <span
+                          className="page-link"
+                          onClick={() => setCurrentPage(i + 1)}
+                          role="button"
+                        >
+                          {i + 1}
+                        </span>
+                      </li>
+                    )
+                  )}
+                  <li
+                    className={`page-item ${
+                      currentPage === Math.ceil(totalRecords / pageSize)
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
                     <span
                       className="page-link"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, Math.ceil(totalRecords / pageSize)))}
+                      onClick={() =>
+                        setCurrentPage((prev) =>
+                          Math.min(prev + 1, Math.ceil(totalRecords / pageSize))
+                        )
+                      }
                       role="button"
                     >
                       ›

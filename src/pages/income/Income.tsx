@@ -13,7 +13,7 @@ export const Income: React.FC = () => {
       {user && <Sidebar />}
       <div
         className="container-fluid py-4"
-        style={(styles.container, { paddingLeft: user ? 180 : 0 })}
+        style={(styles.container, { paddingLeft: 260 })}
       >
         <IncomeHeader user={user} />
         <div className="divider" style={styles.divider} />

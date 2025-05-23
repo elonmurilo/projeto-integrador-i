@@ -15,7 +15,7 @@ export const Home: React.FC = () => {
       {user && <Sidebar />}
       <div
         className="container-fluid py-4"
-        style={(styles.container, { paddingLeft: user ? 180 : 0 })}
+        style={(styles.container, { paddingLeft: 180 })}
       >
         <div>
           <h5 className="mb-4" style={{ paddingLeft: 80 }}>

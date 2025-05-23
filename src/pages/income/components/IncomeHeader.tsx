@@ -131,7 +131,6 @@ export const IncomeHeader: React.FC<IncomeHeaderProps> = ({ user }) => {
           <div className="card text-center p-3">
             <div className="card-body">
               <div className="fs-1 mb-2">
-                {" "}
                 <FaDollarSign />
               </div>
               <h5 className="card-title">{`R$${totalRevenue.toFixed(2)}`}</h5>
