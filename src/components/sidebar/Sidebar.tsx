@@ -10,12 +10,14 @@ import {
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../config/supabase";
+import { useAuth } from "../../contexts/AuthContext";
 
 import { CiLogout } from "react-icons/ci";
 
 export const Sidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -89,12 +91,8 @@ export const Sidebar: React.FC = () => {
 
       <div className="sidebar-footer">
         <img src="/avatar.png" alt="Usuário" className="avatar" />
-        <div
-          className="user-info"
-          onClick={() => navigate("/perfil")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="name">Edmarcia</div>
+        <div className="user-info" onClick={() => navigate("/perfil")} style={{ cursor: "pointer" }}>
+          <div className="name">{user?.user_metadata?.name || "Nome não informado"}</div>
           <div className="role">Administradora</div>
         </div>
         <CiLogout onClick={handleLogout} />
