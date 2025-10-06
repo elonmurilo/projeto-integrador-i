@@ -3,12 +3,14 @@ import React from "react";
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   variant?: "primary" | "danger" | "success" | "google";
+  ariaLabel?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   children,
   variant = "primary",
   className = "",
+  ariaLabel,
   ...props
 }) => {
   const variantClass =
@@ -17,7 +19,11 @@ export const Button: React.FC<ButtonProps> = ({
       : `btn btn-${variant}`;
 
   return (
-    <button className={`${variantClass} ${className}`} {...props}>
+    <button
+      className={`${variantClass} ${className}`}
+      aria-label={ariaLabel}
+      {...props}
+    >
       {children}
     </button>
   );

@@ -1,3 +1,4 @@
+/* === Estrutura básica da sidebar === */
 .sidebar {
   width: 80px;
   background: #ffffff;
@@ -8,7 +9,6 @@
   position: fixed;
   left: 0;
   top: 0;
-  height: 100vh;
   z-index: 1000;
 }
 
@@ -27,7 +27,6 @@
   justify-content: flex-start;
 }
 
-
 .logo-icon {
   font-size: 24px;
   margin-bottom: 0.5rem;
@@ -45,7 +44,7 @@
   display: inline;
 }
 
-
+/* === Lista principal === */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -55,41 +54,58 @@
   gap: 1rem;
 }
 
-.sidebar-menu li {
+/* === Botões substituindo os <li> clicáveis === */
+.sidebar-menu button {
+  all: unset;              /* remove estilo padrão do botão */
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   padding: 0.5rem 1rem;
   color: #333;
+  width: 100%;
   cursor: pointer;
+  font: inherit;
+  border-radius: 5px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.sidebar:hover .sidebar-menu li {
+.sidebar:hover .sidebar-menu button {
   justify-content: flex-start;
 }
 
-.sidebar-menu li span {
+/* === Texto dos botões === */
+.sidebar-menu button span {
   display: none;
 }
 
-.sidebar-menu li.active {
-  color: #6C2BD9;
-  border-radius: 5px;
-}
-
-.sidebar-menu li.active svg {
-  color: #6C2BD9;
-}
-
-.sidebar-menu li:hover {
-  background-color: #f0f0f0;
-}
-
-.sidebar:hover .sidebar-menu li span {
+.sidebar:hover .sidebar-menu button span {
   display: inline;
 }
 
+/* === Estado ativo === */
+.sidebar-menu button.active {
+  color: #6C2BD9;
+  background-color: #f7f3ff;
+  border-radius: 5px;
+}
+
+.sidebar-menu button.active svg {
+  color: #6C2BD9;
+}
+
+/* === Hover === */
+.sidebar-menu button:hover {
+  background-color: #f0f0f0;
+}
+
+/* === Foco acessível (para navegação por teclado) === */
+.sidebar-menu button:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+}
+
+/* === Rodapé (perfil + logout) === */
 .sidebar-footer {
   position: absolute;
   bottom: 1rem;
@@ -112,10 +128,32 @@
   border-radius: 50%;
 }
 
+/* === Informações do usuário === */
 .user-info {
   display: none;
 }
 
 .sidebar:hover .user-info {
   display: block;
+}
+
+/* === Botão de logout === */
+.logout-button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.logout-button:hover {
+  color: #6C2BD9;
+}
+
+.logout-button:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
 }
