@@ -157,3 +157,26 @@
   outline: 2px solid #6C2BD9;
   outline-offset: 2px;
 }
+
+/* --- Correção de alinhamento nos dois estados --- */
+
+/* Contraído: ícone exatamente centralizado */
+.sidebar:not(:hover) .sidebar-menu button {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+
+/* Garante que não haja deslocamento residual no ícone */
+.sidebar:not(:hover) .sidebar-menu button svg {
+  margin: 0 auto;
+  display: block;
+}
+
+/* Expandido: ícone + texto alinhados à esquerda com espaçamento confortável */
+.sidebar:hover .sidebar-menu button {
+  justify-content: flex-start;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
