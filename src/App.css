@@ -1,3 +1,4 @@
+/* === Estrutura padrão da aplicação React === */
 .App {
   text-align: center;
 }
@@ -34,5 +35,95 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+/* === ESTILOS GLOBAIS DE ACESSIBILIDADE === */
+
+/* Foco visível em campos de formulário */
+form input:focus-visible,
+form select:focus-visible,
+form textarea:focus-visible {
+  outline: 2px solid #6C2BD9; /* roxo CleanTrack */
+  outline-offset: 2px;
+  box-shadow: none;
+  transition: outline 0.2s ease;
+}
+
+/* Foco visível em botões */
+button:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 3px;
+  box-shadow: none;
+}
+
+/* Foco visível em botões dentro do modal (Bootstrap) */
+.modal-footer .btn:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+}
+
+/* Foco em links */
+a:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* Foco visível nos botões de fechar do modal */
+button.close:focus-visible,
+button.btn-close:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+  border-radius: 50%;
+}
+
+/* === CONTRASTE E LEGIBILIDADE === */
+
+/* Alertas (Bootstrap) */
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+  font-weight: 500;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+  font-weight: 500;
+}
+
+/* Botão outline-danger (Google) com contraste reforçado */
+.btn-outline-danger {
+  color: #c82333;
+  border-color: #c82333;
+}
+
+.btn-outline-danger:hover {
+  background-color: #c82333;
+  color: #fff;
+}
+
+/* === Transição suave em elementos interativos === */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+/* === Evita zoom automático em iOS e melhora leitura === */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* === Suporte a usuários com preferência por contraste elevado === */
+@media (prefers-contrast: more) {
+  *:focus-visible {
+    outline-color: #000;
   }
 }
