@@ -44,7 +44,7 @@
 form input:focus-visible,
 form select:focus-visible,
 form textarea:focus-visible {
-  outline: 2px solid #6C2BD9; /* roxo CleanTrack */
+  outline: 2px solid #6C2BD9;
   outline-offset: 2px;
   box-shadow: none;
   transition: outline 0.2s ease;
@@ -80,8 +80,6 @@ button.btn-close:focus-visible {
 }
 
 /* === CONTRASTE E LEGIBILIDADE === */
-
-/* Alertas (Bootstrap) */
 .alert-danger {
   background-color: #f8d7da;
   color: #721c24;
@@ -96,7 +94,6 @@ button.btn-close:focus-visible {
   font-weight: 500;
 }
 
-/* Botão outline-danger (Google) com contraste reforçado */
 .btn-outline-danger {
   color: #c82333;
   border-color: #c82333;
@@ -121,7 +118,7 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* === Suporte a usuários com preferência por contraste elevado === */
+/* === Suporte a usuários com contraste elevado === */
 @media (prefers-contrast: more) {
   *:focus-visible {
     outline-color: #000;
@@ -136,7 +133,7 @@ html {
   border-color: #6C2BD9;
 }
 
-/* === Selects longos (Cliente, Carro) === */
+/* === Selects longos === */
 select:focus-visible {
   outline: 2px solid #6C2BD9;
   outline-offset: 2px;
@@ -156,7 +153,7 @@ select:focus-visible {
   transform: scale(1.03);
 }
 
-/* === Ajuste extra: transição suave nos checkboxes === */
+/* === Checkboxes === */
 .form-check-input {
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
@@ -167,20 +164,18 @@ select:focus-visible {
 }
 
 /* === ACESSIBILIDADE E FOCO VISUAL === */
-
-/* Indica foco em todos os elementos interativos */
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid #6C2BD9; /* Roxo principal do sistema */
+  outline: 2px solid #6C2BD9;
   outline-offset: 2px;
   border-radius: 4px;
   transition: outline 0.2s ease;
 }
 
-/* Corrige contraste de textos sobre fundo claro */
+/* Corrige contraste de textos */
 body,
 .container,
 .table,
@@ -189,7 +184,7 @@ body,
   color: #1c1c1c;
 }
 
-/* Contraste aprimorado para elementos desabilitados */
+/* Contraste para elementos desabilitados */
 button:disabled,
 .page-item.disabled .page-link {
   opacity: 0.6;
@@ -197,7 +192,7 @@ button:disabled,
   color: #666 !important;
 }
 
-/* Botões principais com foco e hover mais perceptíveis */
+/* Botões principais */
 .btn-primary {
   background-color: #6C2BD9;
   border-color: #6C2BD9;
@@ -208,7 +203,7 @@ button:disabled,
   border-color: #5a23b8;
 }
 
-/* Botões de ação pequenos (editar/excluir) */
+/* Botões pequenos */
 .btn-outline-primary,
 .btn-outline-danger {
   display: inline-flex;
@@ -222,7 +217,7 @@ button:disabled,
   background-color: #f7f3ff;
 }
 
-/* Melhora contraste de textos dentro de cards e containers */
+/* Contraste dentro de containers */
 .bg-white,
 .table-light,
 .card,
@@ -231,13 +226,9 @@ button:disabled,
 }
 
 /* === TABELA === */
-
-/* Legibilidade nas linhas alternadas */
 .table tbody tr:nth-child(even) {
   background-color: #fafafa;
 }
-
-/* Realce de linha ao passar o mouse */
 .table tbody tr:hover {
   background-color: #f2ecff;
   transition: background-color 0.2s ease;
@@ -258,7 +249,7 @@ button:disabled,
   color: #fff;
 }
 
-/* === ESTADOS DE FEEDBACK === */
+/* === ALERTAS === */
 .alert {
   font-size: 0.95rem;
   border-radius: 8px;
@@ -273,19 +264,13 @@ button:disabled,
 }
 
 /* === AJUSTES GERAIS === */
-
-/* Garante que o foco não desapareça em temas claros */
 :focus-visible {
   scroll-margin: 100px;
 }
-
-/* Melhor contraste para placeholders */
 ::placeholder {
   color: #777;
   opacity: 1;
 }
-
-/* Melhora visibilidade de tooltips e títulos */
 [title]:hover::after {
   content: attr(title);
   position: absolute;
@@ -297,4 +282,109 @@ button:disabled,
   white-space: nowrap;
   transform: translateY(-1.8em);
   pointer-events: none;
+}
+
+/* === ÁREA PRINCIPAL DE CONTEÚDO === */
+.main-content {
+  margin-left: 80px; /* largura padrão da sidebar recolhida */
+  transition: margin-left 0.3s ease;
+  background-color: #eef4ff;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+/* Quando a sidebar expande (hover em desktop) */
+.sidebar:hover ~ .main-content {
+  margin-left: 250px;
+}
+
+/* === RESPONSIVIDADE === */
+
+/* Tablet (até 991px) */
+@media (max-width: 991px) {
+  .main-content {
+    margin-left: 70px;
+    padding: 1rem;
+  }
+
+  .sidebar:hover ~ .main-content {
+    margin-left: 220px;
+  }
+}
+
+/* Mobile (até 768px) */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 65px !important;
+    padding: 0.75rem;
+  }
+
+  .sidebar:hover ~ .main-content {
+    margin-left: 65px !important;
+  }
+
+  .d-flex,
+  .flex-wrap {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .card,
+  .bg-white {
+    margin-bottom: 1rem;
+    width: 100% !important;
+  }
+
+  .table-responsive,
+  table,
+  input,
+  select {
+    width: 100% !important;
+    font-size: 0.9rem;
+  }
+
+  th,
+  td {
+    white-space: nowrap;
+  }
+
+  h5,
+  h4,
+  h3 {
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+/* Layout ultrapequeno (até 480px) */
+@media (max-width: 480px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .main-content {
+    margin-left: 60px !important;
+    padding: 0.5rem;
+  }
+
+  .card,
+  .bg-white {
+    box-shadow: none;
+    border-radius: 8px;
+  }
+
+  button,
+  .btn {
+    font-size: 0.9rem;
+  }
+}
+
+/* === BLOQUEIA DUPLICAÇÕES ANTERIORES === */
+@media (max-width: 991px),
+(max-width: 768px),
+(max-width: 480px) {
+  .container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }

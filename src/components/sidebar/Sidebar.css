@@ -16,6 +16,7 @@
   width: 250px;
 }
 
+/* === Cabeçalho === */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -34,9 +35,9 @@
 
 .logo-text {
   display: none;
-  font-size: 1.25rem; /* tamanho maior */
-  font-weight: 600;   /* texto mais "forte" */
-  color: #333;        /* cor escura para destaque */
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
   margin-left: 0.5rem;
 }
 
@@ -44,7 +45,7 @@
   display: inline;
 }
 
-/* === Lista principal === */
+/* === Menu principal === */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -54,9 +55,9 @@
   gap: 1rem;
 }
 
-/* === Botões substituindo os <li> clicáveis === */
+/* === Botões === */
 .sidebar-menu button {
-  all: unset;              /* remove estilo padrão do botão */
+  all: unset;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +75,6 @@
   justify-content: flex-start;
 }
 
-/* === Texto dos botões === */
 .sidebar-menu button span {
   display: none;
 }
@@ -99,7 +99,7 @@
   background-color: #f0f0f0;
 }
 
-/* === Foco acessível (para navegação por teclado) === */
+/* === Foco acessível === */
 .sidebar-menu button:focus-visible {
   outline: 2px solid #6C2BD9;
   outline-offset: 2px;
@@ -158,9 +158,7 @@
   outline-offset: 2px;
 }
 
-/* --- Correção de alinhamento nos dois estados --- */
-
-/* Contraído: ícone exatamente centralizado */
+/* === Correção de alinhamento === */
 .sidebar:not(:hover) .sidebar-menu button {
   justify-content: center;
   padding-left: 0;
@@ -168,15 +166,66 @@
   text-align: center;
 }
 
-/* Garante que não haja deslocamento residual no ícone */
 .sidebar:not(:hover) .sidebar-menu button svg {
   margin: 0 auto;
   display: block;
 }
 
-/* Expandido: ícone + texto alinhados à esquerda com espaçamento confortável */
 .sidebar:hover .sidebar-menu button {
   justify-content: flex-start;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+/* === Responsividade === */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+
+  .sidebar:hover {
+    width: 220px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    width: 65px;
+    height: 100vh;
+    z-index: 1100;
+  }
+
+  /* A sidebar não expande automaticamente no mobile */
+  .sidebar:hover {
+    width: 65px;
+  }
+
+  /* Ícones centralizados, texto oculto */
+  .sidebar .sidebar-menu button span,
+  .sidebar .logo-text,
+  .sidebar .user-info {
+    display: none !important;
+  }
+
+  /* Reduz o tamanho dos ícones */
+  .sidebar-menu button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Ajuste da área principal quando a sidebar está fixa */
+  .main-content {
+    margin-left: 70px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .main-content {
+    margin-left: 60px !important;
+  }
 }

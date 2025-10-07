@@ -43,39 +43,27 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
 
-      <div
-        className={!isHomepage ? "container-fluid py-4" : ""}
-        style={
-          isHomepage
-            ? { paddingLeft: 80, paddingRight: "60px" }
-            : {
-                paddingLeft: 260,
-                transition: "margin-left 0.3s ease",
-                paddingRight: "60px",
-              }
-        }
+      {/* 🔹 Ajuste de responsividade: uso da classe .main-content */}
+      <main
+        className={`container-fluid py-4 ${!isHomepage ? "main-content" : ""}`}
+        style={{ paddingRight: "60px" }}
       >
+        {/* Cabeçalho condicional */}
         {!isHomepage && (
           <h5 className="mb-4">
             Olá {user?.user_metadata?.name || "Usuário"} 👋
           </h5>
         )}
 
-        <div
-          className="container p-4"
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: "1rem",
-            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-          }}
+        <section
+          className="container p-4 bg-white rounded shadow-sm"
+          aria-label="Gerenciamento de clientes"
         >
-          <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+          <header className="d-flex justify-content-between align-items-center flex-wrap mb-3">
             {!isHomepage ? (
               <>
                 <h5 className="mb-3">Todos os Clientes</h5>
-                <div
-                  style={{ display: "flex", flexDirection: "row", gap: "10px" }}
-                >
+                <div className="d-flex flex-row gap-2">
                   <button
                     className="btn btn-primary"
                     onClick={() => openRegisterClientModal()}
@@ -92,8 +80,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
               </>
             ) : (
               <>
-                <h5>Todos os Clientes </h5>
-
+                <h5>Todos os Clientes</h5>
                 <Search
                   searchTerm={searchTerm}
                   setSearchTerm={setSearchTerm}
@@ -102,7 +89,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                 />
               </>
             )}
-          </div>
+          </header>
 
           <div className="table-responsive">
             <table className="table table-hover table-bordered align-middle">
@@ -159,12 +146,12 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
             </table>
           </div>
 
-          <div className="d-flex justify-content-between align-items-center mt-3">
+          <footer className="d-flex justify-content-between align-items-center mt-3">
             <small>
               Mostrando {clients.length} de {totalClients} cadastros encontrados
             </small>
             {totalPages > 1 && (
-              <nav>
+              <nav aria-label="Paginação dos clientes">
                 <ul className="pagination pagination-sm mb-0">
                   <li
                     className={`page-item ${
@@ -205,7 +192,9 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                     <span
                       className="page-link"
                       onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                        setCurrentPage((prev) =>
+                          Math.min(prev + 1, totalPages)
+                        )
                       }
                       role="button"
                     >
@@ -215,9 +204,9 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                 </ul>
               </nav>
             )}
-          </div>
-        </div>
-      </div>
+          </footer>
+        </section>
+      </main>
 
       {showModal && (
         <RegisterClientModal
@@ -237,7 +226,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
           <Modal.Title>Confirmar Exclusão</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza de que deseja remover o cliente
+          Tem certeza de que deseja remover o cliente{" "}
           <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser
           desfeita.
         </Modal.Body>

@@ -34,6 +34,7 @@ export const Sidebar: React.FC = () => {
 
   return (
     <nav className="sidebar" aria-label="Menu principal">
+      {/* Cabeçalho */}
       <div className="sidebar-header">
         <span className="logo-icon">
           <img src="/logo.png" alt="Logo CleanTrack" className="avatar" />
@@ -41,12 +42,14 @@ export const Sidebar: React.FC = () => {
         <span className="logo-text">CleanTrack</span>
       </div>
 
+      {/* Menu principal */}
       <ul className="sidebar-menu">
         <li>
           <button
             className={location.pathname === "/" ? "active" : ""}
             onClick={() => navigate("/")}
             aria-label="Ir para Página Inicial"
+            aria-current={location.pathname === "/" ? "page" : undefined}
           >
             <FaHome aria-hidden="true" />
             <span>Página Inicial</span>
@@ -58,6 +61,7 @@ export const Sidebar: React.FC = () => {
             className={location.pathname === "/servicos" ? "active" : ""}
             onClick={() => navigate("/servicos")}
             aria-label="Ir para Serviços"
+            aria-current={location.pathname === "/servicos" ? "page" : undefined}
           >
             <FaCalendarAlt aria-hidden="true" />
             <span>Serviços</span>
@@ -69,6 +73,7 @@ export const Sidebar: React.FC = () => {
             className={location.pathname.startsWith("/clientes") ? "active" : ""}
             onClick={() => navigate("/clientes")}
             aria-label="Ir para Clientes"
+            aria-current={location.pathname.startsWith("/clientes") ? "page" : undefined}
           >
             <FaUser aria-hidden="true" />
             <span>Clientes</span>
@@ -77,11 +82,10 @@ export const Sidebar: React.FC = () => {
 
         <li>
           <button
-            className={
-              location.pathname.startsWith("/faturamento") ? "active" : ""
-            }
+            className={location.pathname.startsWith("/faturamento") ? "active" : ""}
             onClick={() => navigate("/faturamento")}
             aria-label="Ir para Faturamento"
+            aria-current={location.pathname.startsWith("/faturamento") ? "page" : undefined}
           >
             <FaMoneyBill aria-hidden="true" />
             <span>Faturamento</span>
@@ -93,6 +97,7 @@ export const Sidebar: React.FC = () => {
             className={location.pathname === "/promocoes" ? "active" : ""}
             onClick={() => navigate("/promocoes")}
             aria-label="Ir para Promoções"
+            aria-current={location.pathname === "/promocoes" ? "page" : undefined}
           >
             <FaTags aria-hidden="true" />
             <span>Promoções</span>
@@ -104,6 +109,7 @@ export const Sidebar: React.FC = () => {
             className={location.pathname === "/ajuda" ? "active" : ""}
             onClick={() => navigate("/ajuda")}
             aria-label="Ir para Ajuda"
+            aria-current={location.pathname === "/ajuda" ? "page" : undefined}
           >
             <FaQuestion aria-hidden="true" />
             <span>Ajuda</span>
@@ -111,6 +117,7 @@ export const Sidebar: React.FC = () => {
         </li>
       </ul>
 
+      {/* Rodapé */}
       <footer className="sidebar-footer">
         <img src="/avatar.png" alt="Foto do usuário" className="avatar" />
 
@@ -125,7 +132,7 @@ export const Sidebar: React.FC = () => {
           <div className="name">
             {user?.user_metadata?.name || "Nome não informado"}
           </div>
-          <div className="role">Administradora</div>
+          <div className="role">Administrador(a)</div>
         </div>
 
         <button

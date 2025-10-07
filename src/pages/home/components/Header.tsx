@@ -1,5 +1,4 @@
 import React from "react";
-
 import { FaRegUser } from "react-icons/fa";
 import { CircularButton, Label } from "../StyledComponents";
 import { ReactComponent as ClientIcon } from "./svg/client-header.svg";
@@ -29,22 +28,29 @@ export const Header: React.FC = () => {
 
   return (
     <div
-      className="d-flex justify-content-between align-items-center flex-wrap mb-3"
-      style={{ flexDirection: "row" }}
+      className="d-flex justify-content-between align-items-center flex-wrap mb-3 px-3"
+      style={{ rowGap: "1rem" }}
     >
-      <div className="button" style={{ paddingLeft: "80px" }}>
-        <CircularButton onClick={() => openRegisterClientModal()}>
+      {/* Botão de cadastro */}
+      <div className="button d-flex flex-column align-items-center">
+        <CircularButton
+          onClick={() => openRegisterClientModal()}
+          aria-label="Cadastrar novo cliente"
+          title="Cadastrar novo cliente"
+        >
           <FaRegUser size={30} color="black" />
         </CircularButton>
-        <Label>Cadastrar Novo Cliente</Label>
+        <Label className="mt-2 text-center">Cadastrar Novo Cliente</Label>
       </div>
 
+      {/* Container principal de status */}
       <div
-        className="status"
+        className="status d-flex flex-wrap justify-content-center align-items-center text-center"
         style={styles.headerContainer as React.CSSProperties}
       >
+        {/* Total de Serviços Hoje */}
         <div
-          className="service-total"
+          className="service-total d-flex align-items-center justify-content-center"
           style={styles.serviceTotal as React.CSSProperties}
         >
           <ClientsIcon width={60} height={60} />
@@ -55,9 +61,12 @@ export const Header: React.FC = () => {
             </span>
           </div>
         </div>
+
         <div className="divider" style={styles.divider} />
+
+        {/* Total de Clientes */}
         <div
-          className="client-total"
+          className="client-total d-flex align-items-center justify-content-center"
           style={styles.clientTotal as React.CSSProperties}
         >
           <ClientIcon width={60} height={60} />
@@ -68,9 +77,12 @@ export const Header: React.FC = () => {
             </span>
           </div>
         </div>
+
         <div className="divider" style={styles.divider} />
+
+        {/* Total de Serviços do Mês */}
         <div
-          className="month-service-total"
+          className="month-service-total d-flex align-items-center justify-content-center"
           style={styles.monthServiceTotal as React.CSSProperties}
         >
           <ServicesIcon width={60} height={60} />
@@ -83,6 +95,7 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
+      {/* Modal */}
       {showModal && (
         <RegisterClientModal
           show={showModal}

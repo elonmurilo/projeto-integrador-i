@@ -11,14 +11,14 @@ export const Income: React.FC = () => {
   return (
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <div
-        className="container-fluid py-4"
-        style={(styles.container, { paddingLeft: 260 })}
-      >
+
+      <main className="container-fluid py-4 main-content" style={styles.container}>
         <IncomeHeader user={user} />
-        <div className="divider" style={styles.divider} />
+
+        <div className="divider my-4" style={styles.divider} />
+
         <IncomeGoals />
-      </div>
+      </main>
     </div>
   );
 };

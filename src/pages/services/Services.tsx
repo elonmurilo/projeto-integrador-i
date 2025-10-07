@@ -95,11 +95,11 @@ export const Services: React.FC = () => {
   return (
     <div style={{ backgroundColor: "#eef4ff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <main className="container-fluid py-4" style={{ paddingLeft: 260 }}>
+
+      {/* Ajuste de responsividade: padding controlado via CSS */}
+      <main className="container-fluid py-4 main-content">
         <header className="mb-4">
-          <h5>
-            Olá {user?.user_metadata?.name || "Usuário"} 👋
-          </h5>
+          <h5>Olá {user?.user_metadata?.name || "Usuário"} 👋</h5>
         </header>
 
         <section

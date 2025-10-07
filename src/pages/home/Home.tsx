@@ -1,8 +1,6 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-
 import { Sidebar } from "../../components/sidebar/Sidebar";
-
 import { styles } from "./styles";
 import { Header } from "./components/Header";
 import { Clients } from "../clients/Clients";
@@ -13,20 +11,18 @@ export const Home: React.FC = () => {
   return (
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
-      <div
-        className="container-fluid py-4"
-        style={(styles.container, { paddingLeft: 180 })}
-      >
-        <div>
-          <h5 className="mb-4" style={{ paddingLeft: 80 }}>
+
+      <main className="container-fluid py-4 main-content" style={styles.container}>
+        <header className="mb-4">
+          <h5>
             Olá {user?.user_metadata?.name || "Usuário"} 👋
           </h5>
-        </div>
+        </header>
 
         <Header />
 
         <Clients isHomepage />
-      </div>
+      </main>
     </div>
   );
 };
