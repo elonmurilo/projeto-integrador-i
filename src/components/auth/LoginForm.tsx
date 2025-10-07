@@ -43,9 +43,13 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} aria-label="Formulário de login">
       {error && (
-        <div className="alert alert-danger" role="alert">
+        <div
+          className="alert alert-danger"
+          role="alert"
+          aria-live="assertive"
+        >
           {error}
         </div>
       )}
@@ -62,6 +66,8 @@ export const LoginForm: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+          aria-required="true"
+          aria-label="Campo para digitar o e-mail de acesso"
         />
       </div>
 
@@ -77,17 +83,25 @@ export const LoginForm: React.FC = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+          aria-required="true"
+          aria-label="Campo para digitar a senha de acesso"
         />
       </div>
 
       <div className="d-grid gap-2 mb-3">
-        <button type="submit" className="btn btn-primary">
+        <button
+          type="submit"
+          className="btn btn-primary"
+          aria-label="Entrar com e-mail e senha"
+        >
           Entrar
         </button>
+
         <button
           type="button"
           className="btn btn-outline-danger"
           onClick={handleGoogleLogin}
+          aria-label="Entrar com conta Google"
         >
           Entrar com Google
         </button>
@@ -96,6 +110,8 @@ export const LoginForm: React.FC = () => {
       <div className="text-center">
         <a
           href="#"
+          role="button"
+          aria-label="Recuperar senha de acesso"
           onClick={(e) => {
             e.preventDefault();
             navigate("/auth/forgot-password");
@@ -104,8 +120,11 @@ export const LoginForm: React.FC = () => {
         >
           Esqueceu sua senha?
         </a>
+
         <a
           href="#"
+          role="button"
+          aria-label="Cadastrar nova conta de usuário"
           onClick={(e) => {
             e.preventDefault();
             navigate("/auth/register");
