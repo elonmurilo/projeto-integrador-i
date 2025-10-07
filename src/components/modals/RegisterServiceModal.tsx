@@ -9,13 +9,20 @@ const FeedbackModal: React.FC<{
   variant: "success" | "danger";
   onClose: () => void;
 }> = ({ show, title, message, variant, onClose }) => (
-  <Modal show={show} onHide={onClose} centered>
+  <Modal
+    show={show}
+    onHide={onClose}
+    centered
+    aria-labelledby="feedback-modal-title"
+    role="alertdialog"
+    aria-live="assertive"
+  >
     <Modal.Header closeButton className={`bg-${variant} text-white`}>
-      <Modal.Title>{title}</Modal.Title>
+      <Modal.Title id="feedback-modal-title">{title}</Modal.Title>
     </Modal.Header>
     <Modal.Body>{message}</Modal.Body>
     <Modal.Footer>
-      <Button variant={variant} onClick={onClose}>
+      <Button variant={variant} onClick={onClose} aria-label="Fechar mensagem de confirmação">
         Confirmar
       </Button>
     </Modal.Footer>
@@ -95,7 +102,6 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
       return;
     }
 
-    // Preenchimento direto com os dados já carregados do objeto `servico`
     setForm({
       id_cli: String(servico.id_cli || servico.clientes?.id_cli || ""),
       id_car: String(servico.id_car || servico.carros?.id_car || ""),
@@ -136,12 +142,11 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
       }
 
       if (servico) {
-        // Atualização de serviço
         const { error: errServUpdate } = await supabase
           .from("servicos")
           .update({
             id_por: Number(form.id_por),
-            valor: parseFloat(form.valor)
+            valor: parseFloat(form.valor),
           })
           .eq("id_serv", idServ);
         if (errServUpdate) throw errServUpdate;
@@ -157,7 +162,6 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
           .eq("id_rea", idRea);
         if (errAgendaUpdate) throw errAgendaUpdate;
 
-        // Deleta lavagens anteriores e insere as novas
         await supabase.from("agenda_servico").delete().eq("id_rea", idRea);
 
         const novosServicos = form.id_lavserv.map((idLav) => ({
@@ -169,16 +173,14 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
           .from("agenda_servico")
           .insert(novosServicos);
         if (errAgServInsert) throw errAgServInsert;
-
       } else {
-        // Inserção nova
         const { data: servicoData, error: errServico } = await supabase
           .from("servicos")
           .insert([
             {
               id_por: Number(form.id_por),
-              valor: parseFloat(form.valor)
-            }
+              valor: parseFloat(form.valor),
+            },
           ])
           .select()
           .single();
@@ -194,7 +196,7 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
               id_serv: idServ,
               data_rea: form.data_rea,
               hora_rea: form.hora_rea,
-            }
+            },
           ])
           .select()
           .single();
@@ -228,17 +230,37 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
 
   return (
     <>
-      <Modal show={show} onHide={onHide} size="lg" centered>
-        <Form onSubmit={handleSubmit}>
+      <Modal
+        show={show}
+        onHide={onHide}
+        size="lg"
+        centered
+        aria-labelledby="register-service-modal-title"
+        role="dialog"
+      >
+        <Form
+          onSubmit={handleSubmit}
+          aria-label="Formulário de cadastro de serviço"
+        >
           <Modal.Header closeButton>
-            <Modal.Title>{servico ? "Editar Serviço" : "Novo Serviço"}</Modal.Title>
+            <Modal.Title id="register-service-modal-title">
+              {servico ? "Editar Serviço" : "Novo Serviço"}
+            </Modal.Title>
           </Modal.Header>
+
           <Modal.Body>
             <Row className="mb-3">
               <Col md={8}>
-                <Form.Group>
+                <Form.Group controlId="service-cliente">
                   <Form.Label>Nome do cliente</Form.Label>
-                  <Form.Select name="id_cli" value={form.id_cli} onChange={handleChange} required>
+                  <Form.Select
+                    name="id_cli"
+                    value={form.id_cli}
+                    onChange={handleChange}
+                    required
+                    aria-required="true"
+                    aria-label="Selecione o cliente"
+                  >
                     <option value="">Selecione</option>
                     {clientes.map((c) => (
                       <option key={c.id_cli} value={c.id_cli}>
@@ -249,7 +271,7 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
                 </Form.Group>
               </Col>
               <Col md={4}>
-                <Form.Group>
+                <Form.Group controlId="service-data">
                   <Form.Label>Data do Agendamento</Form.Label>
                   <Form.Control
                     type="date"
@@ -257,6 +279,7 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
                     value={form.data_rea}
                     onChange={handleChange}
                     required
+                    aria-label="Data do agendamento"
                   />
                 </Form.Group>
               </Col>
@@ -264,20 +287,28 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
 
             <Row className="mb-3">
               <Col md={8}>
-                <Form.Group>
+                <Form.Group controlId="service-carro">
                   <Form.Label>Carro</Form.Label>
-                  <Form.Select name="id_car" value={form.id_car} onChange={handleChange} required>
+                  <Form.Select
+                    name="id_car"
+                    value={form.id_car}
+                    onChange={handleChange}
+                    required
+                    aria-required="true"
+                    aria-label="Selecione o veículo"
+                  >
                     <option value="">Selecione</option>
                     {carros.map((carro) => (
                       <option key={carro.id_car} value={carro.id_car}>
-                        {carro.placas?.placa || "Sem placa"} — {carro.marca} {carro.modelo}
+                        {carro.placas?.placa || "Sem placa"} — {carro.marca}{" "}
+                        {carro.modelo}
                       </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
               <Col md={4}>
-                <Form.Group>
+                <Form.Group controlId="service-horario">
                   <Form.Label>Horário do Agendamento</Form.Label>
                   <Form.Control
                     type="time"
@@ -285,43 +316,41 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
                     value={form.hora_rea}
                     onChange={handleChange}
                     required
+                    aria-label="Horário do agendamento"
                   />
                 </Form.Group>
               </Col>
             </Row>
 
-            <Row className="mb-3">
-              <Col md={12}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Tipos de Serviço</Form.Label>
-                  <Row>
-                    {lavagens.map((l, index) => (
-                      <Col key={l.id_lavserv} md={4} className="mb-2">
-                        <Form.Check
-                          type="checkbox"
-                          label={l.lavtipo}
-                          value={l.id_lavserv}
-                          checked={form.id_lavserv.includes(String(l.id_lavserv))}
-                          onChange={(e) => {
-                            const selectedId = String(e.target.value);
-                            setForm((prev) => ({
-                              ...prev,
-                              id_lavserv: e.target.checked
-                                ? [...prev.id_lavserv, selectedId]
-                                : prev.id_lavserv.filter((id) => id !== selectedId),
-                            }));
-                          }}
-                        />
-                      </Col>
-                    ))}
-                  </Row>
-                </Form.Group>
-              </Col>
-            </Row>
+            <Form.Group className="mb-3" controlId="service-tipos">
+              <Form.Label>Tipos de Serviço</Form.Label>
+              <Row>
+                {lavagens.map((l) => (
+                  <Col key={l.id_lavserv} md={4} className="mb-2">
+                    <Form.Check
+                      type="checkbox"
+                      label={l.lavtipo}
+                      value={l.id_lavserv}
+                      checked={form.id_lavserv.includes(String(l.id_lavserv))}
+                      aria-label={`Selecionar tipo de serviço ${l.lavtipo}`}
+                      onChange={(e) => {
+                        const selectedId = String(e.target.value);
+                        setForm((prev) => ({
+                          ...prev,
+                          id_lavserv: e.target.checked
+                            ? [...prev.id_lavserv, selectedId]
+                            : prev.id_lavserv.filter((id) => id !== selectedId),
+                        }));
+                      }}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            </Form.Group>
 
             <Row className="mb-3">
               <Col md={4}>
-                <Form.Group>
+                <Form.Group controlId="service-valor">
                   <Form.Label>Valor (R$)</Form.Label>
                   <Form.Control
                     type="number"
@@ -330,18 +359,40 @@ export const RegisterServiceModal: React.FC<RegisterServiceModalProps> = ({
                     value={form.valor}
                     onChange={handleChange}
                     required
+                    aria-label="Valor total do serviço em reais"
                   />
                 </Form.Group>
               </Col>
             </Row>
-
           </Modal.Body>
+
           <Modal.Footer>
-            <Button variant="secondary" onClick={onHide} disabled={loading}>
+            <Button
+              variant="secondary"
+              onClick={onHide}
+              disabled={loading}
+              aria-label="Cancelar e fechar formulário"
+            >
               Cancelar
             </Button>
-            <Button type="submit" variant="primary" disabled={loading}>
-              {loading ? <Spinner size="sm" animation="border" /> : servico ? "Atualizar" : "Cadastrar"}
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={loading}
+              aria-label={servico ? "Atualizar serviço" : "Cadastrar serviço"}
+            >
+              {loading ? (
+                <Spinner
+                  size="sm"
+                  animation="border"
+                  role="status"
+                  aria-label="Carregando"
+                />
+              ) : servico ? (
+                "Atualizar"
+              ) : (
+                "Cadastrar"
+              )}
             </Button>
           </Modal.Footer>
         </Form>

@@ -127,3 +127,174 @@ html {
     outline-color: #000;
   }
 }
+
+/* === Checkboxes (Tipos de Serviço) === */
+.form-check-input:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(108, 43, 217, 0.3);
+  border-color: #6C2BD9;
+}
+
+/* === Selects longos (Cliente, Carro) === */
+select:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.25);
+  border-color: #6C2BD9;
+}
+
+/* === Botões do Modal === */
+.modal-footer .btn:focus-visible {
+  outline: 2px solid #6C2BD9;
+  outline-offset: 2px;
+  transform: scale(1.02);
+  transition: transform 0.15s ease;
+}
+
+.modal-footer .btn:hover {
+  transform: scale(1.03);
+}
+
+/* === Ajuste extra: transição suave nos checkboxes === */
+.form-check-input {
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.form-check-input:checked {
+  border-color: #6C2BD9;
+  background-color: #6C2BD9;
+}
+
+/* === ACESSIBILIDADE E FOCO VISUAL === */
+
+/* Indica foco em todos os elementos interativos */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #6C2BD9; /* Roxo principal do sistema */
+  outline-offset: 2px;
+  border-radius: 4px;
+  transition: outline 0.2s ease;
+}
+
+/* Corrige contraste de textos sobre fundo claro */
+body,
+.container,
+.table,
+.table td,
+.table th {
+  color: #1c1c1c;
+}
+
+/* Contraste aprimorado para elementos desabilitados */
+button:disabled,
+.page-item.disabled .page-link {
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: #666 !important;
+}
+
+/* Botões principais com foco e hover mais perceptíveis */
+.btn-primary {
+  background-color: #6C2BD9;
+  border-color: #6C2BD9;
+}
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background-color: #5a23b8;
+  border-color: #5a23b8;
+}
+
+/* Botões de ação pequenos (editar/excluir) */
+.btn-outline-primary,
+.btn-outline-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+}
+.btn-outline-primary:hover,
+.btn-outline-danger:hover {
+  background-color: #f7f3ff;
+}
+
+/* Melhora contraste de textos dentro de cards e containers */
+.bg-white,
+.table-light,
+.card,
+.modal-content {
+  color: #1e1e1e;
+}
+
+/* === TABELA === */
+
+/* Legibilidade nas linhas alternadas */
+.table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* Realce de linha ao passar o mouse */
+.table tbody tr:hover {
+  background-color: #f2ecff;
+  transition: background-color 0.2s ease;
+}
+
+/* === PAGINAÇÃO === */
+.pagination .page-link {
+  color: #6C2BD9;
+  border: 1px solid #ddd;
+}
+.pagination .page-link:hover {
+  background-color: #f7f3ff;
+  color: #5a23b8;
+}
+.pagination .page-item.active .page-link {
+  background-color: #6C2BD9;
+  border-color: #6C2BD9;
+  color: #fff;
+}
+
+/* === ESTADOS DE FEEDBACK === */
+.alert {
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+.alert-success {
+  background-color: #e8f9f1;
+  color: #146c43;
+}
+.alert-danger {
+  background-color: #fdecea;
+  color: #b02a37;
+}
+
+/* === AJUSTES GERAIS === */
+
+/* Garante que o foco não desapareça em temas claros */
+:focus-visible {
+  scroll-margin: 100px;
+}
+
+/* Melhor contraste para placeholders */
+::placeholder {
+  color: #777;
+  opacity: 1;
+}
+
+/* Melhora visibilidade de tooltips e títulos */
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  background: #1c1c1c;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transform: translateY(-1.8em);
+  pointer-events: none;
+}
