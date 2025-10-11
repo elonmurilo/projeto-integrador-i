@@ -388,3 +388,46 @@ button:disabled,
     padding-right: 0 !important;
   }
 }
+
+/* === HEADER DA PÁGINA DE CLIENTES === */
+
+.header-clientes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.header-clientes .actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+/* Responsividade específica para o header */
+@media (max-width: 768px) {
+  .header-clientes {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .header-clientes h5 {
+    text-align: center;
+  }
+
+  .header-clientes .actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .header-clientes .actions button,
+  .header-clientes .actions input {
+    width: 100%;
+  }
+}

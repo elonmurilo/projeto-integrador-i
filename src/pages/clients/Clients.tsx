@@ -7,6 +7,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Search } from "../../components/common/Search";
 import { useRegisterClient } from "../../hooks/useRegisterClient";
 import { useClients } from "../../hooks/useClients";
+import "../../App.css"; // garante que os estilos globais estejam aplicados
 
 interface ClientsProps {
   isHomepage?: boolean;
@@ -43,12 +44,12 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
       {user && <Sidebar />}
 
-      {/* 🔹 Ajuste de responsividade: uso da classe .main-content */}
+      {/* 🔹 Área principal do conteúdo */}
       <main
         className={`container-fluid py-4 ${!isHomepage ? "main-content" : ""}`}
         style={{ paddingRight: "60px" }}
       >
-        {/* Cabeçalho condicional */}
+        {/* Saudação do usuário */}
         {!isHomepage && (
           <h5 className="mb-4">
             Olá {user?.user_metadata?.name || "Usuário"} 👋
@@ -59,38 +60,30 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
           className="container p-4 bg-white rounded shadow-sm"
           aria-label="Gerenciamento de clientes"
         >
-          <header className="d-flex justify-content-between align-items-center flex-wrap mb-3">
-            {!isHomepage ? (
-              <>
-                <h5 className="mb-3">Todos os Clientes</h5>
-                <div className="d-flex flex-row gap-2">
-                  <button
-                    className="btn btn-primary"
-                    onClick={() => openRegisterClientModal()}
-                  >
-                    Cadastrar Novo Cliente
-                  </button>
-                  <Search
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    sortOrder={sortOrder}
-                    setSortOrder={setSortOrder}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                <h5>Todos os Clientes</h5>
-                <Search
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-                  sortOrder={sortOrder}
-                  setSortOrder={setSortOrder}
-                />
-              </>
-            )}
+          {/* Cabeçalho da seção de clientes */}
+          <header className="header-clientes">
+            <h5>Todos os Clientes</h5>
+
+            <div className="actions">
+              {!isHomepage && (
+                <button
+                  className="btn btn-primary"
+                  onClick={() => openRegisterClientModal()}
+                >
+                  Cadastrar Novo Cliente
+                </button>
+              )}
+
+              <Search
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+              />
+            </div>
           </header>
 
+          {/* Tabela de clientes */}
           <div className="table-responsive">
             <table className="table table-hover table-bordered align-middle">
               <thead className="table-light">
@@ -146,10 +139,12 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
             </table>
           </div>
 
+          {/* Paginação */}
           <footer className="d-flex justify-content-between align-items-center mt-3">
             <small>
               Mostrando {clients.length} de {totalClients} cadastros encontrados
             </small>
+
             {totalPages > 1 && (
               <nav aria-label="Paginação dos clientes">
                 <ul className="pagination pagination-sm mb-0">
@@ -208,6 +203,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         </section>
       </main>
 
+      {/* Modal de cadastro/edição */}
       {showModal && (
         <RegisterClientModal
           show={showModal}
@@ -217,6 +213,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         />
       )}
 
+      {/* Modal de confirmação de exclusão */}
       <Modal
         show={!!clienteExcluindo}
         onHide={() => setClienteExcluindo(null)}
@@ -227,8 +224,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         </Modal.Header>
         <Modal.Body>
           Tem certeza de que deseja remover o cliente{" "}
-          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser
-          desfeita.
+          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser desfeita.
         </Modal.Body>
         <Modal.Footer>
           <button
