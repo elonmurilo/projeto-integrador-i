@@ -12,10 +12,12 @@
   z-index: 1000;
 }
 
+/* === Expansão ao passar o mouse (apenas desktop) === */
 .sidebar:hover {
   width: 250px;
 }
 
+/* === Cabeçalho === */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -39,7 +41,7 @@
   display: inline;
 }
 
-/* === Itens do menu === */
+/* === Menu principal === */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -49,6 +51,7 @@
   gap: 1rem;
 }
 
+/* === Botões do menu === */
 .sidebar-menu button {
   all: unset;
   display: flex;
@@ -64,15 +67,32 @@
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.sidebar:hover .sidebar-menu button {
-  justify-content: flex-start;
+/* Centraliza ícones quando contraída */
+.sidebar:not(:hover) .sidebar-menu button {
+  justify-content: center;
 }
 
+/* Mostra texto somente quando expandida */
+.sidebar-menu button span {
+  display: none;
+}
+
+.sidebar:hover .sidebar-menu button span {
+  display: inline;
+}
+
+/* === Estado ativo === */
 .sidebar-menu button.active {
   color: #6C2BD9;
   background-color: #f7f3ff;
+  border-radius: 5px;
 }
 
+.sidebar-menu button.active svg {
+  color: #6C2BD9;
+}
+
+/* === Hover === */
 .sidebar-menu button:hover {
   background-color: #f0f0f0;
 }
@@ -100,6 +120,7 @@
   border-radius: 50%;
 }
 
+/* Exibe informações do usuário apenas quando expandida */
 .user-info {
   display: none;
 }
@@ -108,6 +129,7 @@
   display: block;
 }
 
+/* === Botão de logout === */
 .logout-button {
   all: unset;
   cursor: pointer;
@@ -126,7 +148,7 @@
 /* === Responsividade === */
 @media (max-width: 768px) {
   .sidebar {
-    display: none !important; /* escondida, substituída pelo offcanvas */
+    display: none !important; /* substituída pelo Offcanvas */
   }
 
   .menu-toggle {
