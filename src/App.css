@@ -431,3 +431,11 @@ button:disabled,
     width: 100%;
   }
 }
+
+/* === AJUSTE DE CONTEÚDO PRINCIPAL PARA MOBILE === */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0 !important;
+    padding-top: 60px; /* espaço para botão menu */
+  }
+}

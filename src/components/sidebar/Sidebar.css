@@ -1,4 +1,4 @@
-/* === Estrutura básica da sidebar === */
+/* === Estrutura base === */
 .sidebar {
   width: 80px;
   background: #ffffff;
@@ -16,7 +16,6 @@
   width: 250px;
 }
 
-/* === Cabeçalho === */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -26,11 +25,6 @@
 
 .sidebar:hover .sidebar-header {
   justify-content: flex-start;
-}
-
-.logo-icon {
-  font-size: 24px;
-  margin-bottom: 0.5rem;
 }
 
 .logo-text {
@@ -45,7 +39,7 @@
   display: inline;
 }
 
-/* === Menu principal === */
+/* === Itens do menu === */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -55,7 +49,6 @@
   gap: 1rem;
 }
 
-/* === Botões === */
 .sidebar-menu button {
   all: unset;
   display: flex;
@@ -75,37 +68,16 @@
   justify-content: flex-start;
 }
 
-.sidebar-menu button span {
-  display: none;
-}
-
-.sidebar:hover .sidebar-menu button span {
-  display: inline;
-}
-
-/* === Estado ativo === */
 .sidebar-menu button.active {
   color: #6C2BD9;
   background-color: #f7f3ff;
-  border-radius: 5px;
 }
 
-.sidebar-menu button.active svg {
-  color: #6C2BD9;
-}
-
-/* === Hover === */
 .sidebar-menu button:hover {
   background-color: #f0f0f0;
 }
 
-/* === Foco acessível === */
-.sidebar-menu button:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-}
-
-/* === Rodapé (perfil + logout) === */
+/* === Rodapé === */
 .sidebar-footer {
   position: absolute;
   bottom: 1rem;
@@ -128,7 +100,6 @@
   border-radius: 50%;
 }
 
-/* === Informações do usuário === */
 .user-info {
   display: none;
 }
@@ -137,7 +108,6 @@
   display: block;
 }
 
-/* === Botão de logout === */
 .logout-button {
   all: unset;
   cursor: pointer;
@@ -153,79 +123,15 @@
   color: #6C2BD9;
 }
 
-.logout-button:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-}
-
-/* === Correção de alinhamento === */
-.sidebar:not(:hover) .sidebar-menu button {
-  justify-content: center;
-  padding-left: 0;
-  padding-right: 0;
-  text-align: center;
-}
-
-.sidebar:not(:hover) .sidebar-menu button svg {
-  margin: 0 auto;
-  display: block;
-}
-
-.sidebar:hover .sidebar-menu button {
-  justify-content: flex-start;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
 /* === Responsividade === */
-@media (max-width: 992px) {
-  .sidebar {
-    width: 70px;
-  }
-
-  .sidebar:hover {
-    width: 220px;
-  }
-}
-
 @media (max-width: 768px) {
   .sidebar {
-    position: fixed;
-    width: 65px;
-    height: 100vh;
-    z-index: 1100;
+    display: none !important; /* escondida, substituída pelo offcanvas */
   }
 
-  /* A sidebar não expande automaticamente no mobile */
-  .sidebar:hover {
-    width: 65px;
-  }
-
-  /* Ícones centralizados, texto oculto */
-  .sidebar .sidebar-menu button span,
-  .sidebar .logo-text,
-  .sidebar .user-info {
-    display: none !important;
-  }
-
-  /* Reduz o tamanho dos ícones */
-  .sidebar-menu button svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  /* Ajuste da área principal quando a sidebar está fixa */
-  .main-content {
-    margin-left: 70px !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar {
-    width: 60px;
-  }
-
-  .main-content {
-    margin-left: 60px !important;
+  .menu-toggle {
+    z-index: 2000;
+    background-color: #fff;
+    border: 1px solid #ddd;
   }
 }
