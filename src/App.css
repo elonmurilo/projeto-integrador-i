@@ -293,7 +293,7 @@ html, body {
 
 /* Área principal do conteúdo */
 .main-content {
-  margin-left: 47px; /* largura da sidebar recolhida */
+  margin-left: 28px; /* largura da sidebar recolhida */
   padding: 1.5rem;
   transition: margin-left 0.3s ease;
   min-height: 100vh;
@@ -332,12 +332,19 @@ html, body {
   text-align: center;
 }
 
+.status .divider {
+  height: 50px;
+  width: 1px;
+  background-color: #e0e0e0;
+  margin: 0 1.5rem;
+}
+
 /* === RESPONSIVIDADE === */
 
 /* Tablet (até 991px) */
 @media (max-width: 991px) {
   .main-content {
-    margin-left: 70px;
+    margin-left: 28px;
     padding: 1rem;
   }
 

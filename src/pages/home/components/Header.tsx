@@ -28,8 +28,8 @@ export const Header: React.FC = () => {
 
   return (
     <div
-      className="d-flex justify-content-between align-items-center flex-wrap mb-3 px-3"
-      style={{ rowGap: "1rem" }}
+      className="d-flex justify-content-start align-items-start flex-nowrap mb-4 px-3"
+      style={{ gap: "2rem" }}
     >
       {/* Botão de cadastro */}
       <div className="button d-flex flex-column align-items-center">
@@ -45,8 +45,14 @@ export const Header: React.FC = () => {
 
       {/* Container principal de status */}
       <div
-        className="status d-flex flex-wrap justify-content-center align-items-center text-center"
-        style={styles.headerContainer as React.CSSProperties}
+        className="status d-flex justify-content-around align-items-center text-center flex-grow-1"
+        style={{
+          ...(styles.headerContainer as React.CSSProperties),
+          minWidth: "750px",
+          maxWidth: "950px",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
       >
         {/* Total de Serviços Hoje */}
         <div
