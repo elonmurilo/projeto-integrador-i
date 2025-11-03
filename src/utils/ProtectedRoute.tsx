@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation();
 
   // Estado para controlar se a Sidebar está recolhida ou expandida
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
 
   if (loading) {
     return <div>Carregando...</div>;
@@ -27,9 +27,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       className={`app-container ${isCollapsed ? "collapsed" : "expanded"}`}
       style={{ display: "flex", minHeight: "100vh", width: "100%" }}
     >
-      {/* Passa o setter para a Sidebar controlar o estado */}
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-
       <main className="main-content" style={{ flexGrow: 1 }}>
         {children}
       </main>

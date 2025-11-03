@@ -104,13 +104,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, setIsCollapsed })
   return (
     <>
       {/* Botão de alternância (Desktop) */}
-      <button
-        className="menu-toggle-btn d-none d-md-block"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        aria-label="Alternar menu"
-      >
-        <FaBars />
-      </button>
+      {isCollapsed && (
+        <button
+          className="menu-toggle-btn d-none d-md-block"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          aria-label="Alternar menu"
+        >
+          <FaBars />
+        </button>
+      )}
 
       {/* Sidebar fixa no desktop */}
       <nav className={`sidebar d-none d-md-flex flex-column ${isCollapsed ? "collapsed" : "expanded"}`}>
