@@ -10,9 +10,6 @@ import { useClients } from "../../hooks/useClients";
 import "../../App.css"; // garante que os estilos globais estejam aplicados
 import { useLocation } from "react-router-dom";
 
-const location = useLocation();
-
-
 interface ClientsProps {
   isHomepage?: boolean;
 }
@@ -43,6 +40,8 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
   } = useRegisterClient();
 
   const totalPages = Math.ceil(totalClients / 10);
+
+  const location = useLocation();
 
   return (
     <div
