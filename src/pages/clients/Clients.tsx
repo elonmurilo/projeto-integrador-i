@@ -8,6 +8,10 @@ import { Search } from "../../components/common/Search";
 import { useRegisterClient } from "../../hooks/useRegisterClient";
 import { useClients } from "../../hooks/useClients";
 import "../../App.css"; // garante que os estilos globais estejam aplicados
+import { useLocation } from "react-router-dom";
+
+const location = useLocation();
+
 
 interface ClientsProps {
   isHomepage?: boolean;
@@ -41,7 +45,12 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
   const totalPages = Math.ceil(totalClients / 10);
 
   return (
-    <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
+    <div
+      style={{
+        backgroundColor: "#ddeeff",
+        ...(location.pathname === "/clientes" && { minHeight: "100vh" }),
+      }}
+    >
 
       {/* 🔹 Área principal do conteúdo */}
       <main
