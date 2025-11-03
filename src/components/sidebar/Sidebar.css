@@ -1,23 +1,27 @@
-/* === Estrutura base === */
+/* === SIDEBAR BASE === */
 .sidebar {
-  width: 80px;
-  background: #ffffff;
-  border-right: 1px solid #ddd;
-  height: 100vh;
-  transition: width 0.3s ease;
-  overflow: hidden;
   position: fixed;
   left: 0;
   top: 0;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #ddd;
+  overflow: hidden;
+  transition: width 0.3s ease;
   z-index: 1000;
 }
 
-/* Expansão no hover (desktop) */
-.sidebar:hover {
+/* Estado recolhido */
+.sidebar.collapsed {
+  width: 80px;
+}
+
+/* Estado expandido */
+.sidebar.expanded {
   width: 250px;
 }
 
-/* === Cabeçalho === */
+/* === CABEÇALHO === */
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -26,7 +30,7 @@
   transition: all 0.3s ease;
 }
 
-.sidebar:hover .sidebar-header {
+.sidebar.expanded .sidebar-header {
   justify-content: flex-start;
   padding-left: 1.5rem;
 }
@@ -39,11 +43,11 @@
   margin-left: 0.5rem;
 }
 
-.sidebar:hover .logo-text {
+.sidebar.expanded .logo-text {
   display: inline;
 }
 
-/* === Menu principal === */
+/* === MENU PRINCIPAL === */
 .sidebar-menu {
   list-style: none;
   padding: 0;
@@ -53,52 +57,45 @@
   gap: 0.5rem;
 }
 
-/* === Botões do menu === */
 .sidebar-menu button {
   all: unset;
   display: flex;
   align-items: center;
-  justify-content: center; /* centraliza ícones no estado recolhido */
+  justify-content: center; /* ícones centralizados no estado recolhido */
   gap: 12px;
   width: 100%;
   padding: 0.75rem 0;
   color: #333;
   cursor: pointer;
-  font: inherit;
   border-radius: 8px;
   transition: all 0.2s ease;
   text-align: left;
 }
 
-/* Quando expandida, alinha à esquerda e adiciona leve recuo */
-.sidebar:hover .sidebar-menu button {
+.sidebar.expanded .sidebar-menu button {
   justify-content: flex-start;
   padding-left: 1.5rem;
 }
 
-/* Ícone e texto */
+/* Ícones */
 .sidebar-menu button svg {
   font-size: 1.2rem;
   flex-shrink: 0;
 }
 
-/* Oculta texto quando recolhida */
+/* Texto do menu */
 .sidebar-menu button span {
   display: none;
 }
 
-.sidebar:hover .sidebar-menu button span {
+.sidebar.expanded .sidebar-menu button span {
   display: inline;
 }
 
-/* === Estado ativo === */
+/* Estado ativo */
 .sidebar-menu button.active {
   color: #6C2BD9;
   background-color: #f7f3ff;
-}
-
-.sidebar-menu button.active svg {
-  color: #6C2BD9;
 }
 
 /* Hover */
@@ -106,7 +103,7 @@
   background-color: #f0f0f0;
 }
 
-/* === Rodapé === */
+/* === RODAPÉ === */
 .sidebar-footer {
   position: absolute;
   bottom: 1rem;
@@ -118,7 +115,7 @@
   transition: all 0.3s ease;
 }
 
-.sidebar:hover .sidebar-footer {
+.sidebar.expanded .sidebar-footer {
   flex-direction: row;
   align-items: center;
   gap: 0.5rem;
@@ -131,12 +128,11 @@
   border-radius: 50%;
 }
 
-/* Exibe informações do usuário apenas quando expandida */
 .user-info {
   display: none;
 }
 
-.sidebar:hover .user-info {
+.sidebar.expanded .user-info {
   display: block;
 }
 
@@ -155,8 +151,29 @@
   color: #6C2BD9;
 }
 
-/* === OFFCANVAS (MOBILE MENU) === */
+/* === BOTÃO DE TOGGLE (DESKTOP) === */
+.menu-toggle-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2001;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
 
+.menu-toggle-btn:hover {
+  background-color: #f7f3ff;
+}
+
+/* === OFFCANVAS (MOBILE) === */
 .offcanvas-cleantrack .offcanvas-header-custom {
   border-bottom: 1px solid #eee;
   background-color: #fff;
@@ -168,28 +185,24 @@
   color: #333;
 }
 
-/* Mostra texto dentro do Offcanvas */
 .offcanvas-cleantrack .sidebar-menu button span {
   display: inline !important;
   margin-left: 8px;
 }
 
-/* Melhor espaçamento vertical entre botões */
 .offcanvas-cleantrack .sidebar-menu button {
   justify-content: flex-start;
   padding: 0.75rem 1.25rem;
   width: 100%;
 }
 
-/* Centraliza logo no cabeçalho */
 .offcanvas-header-custom .avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
 }
 
-
-/* === Responsividade === */
+/* === MOBILE === */
 @media (max-width: 768px) {
   .sidebar {
     display: none !important; /* substituída pelo Offcanvas */
