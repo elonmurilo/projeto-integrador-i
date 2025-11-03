@@ -306,6 +306,32 @@ html, body {
   margin-left: 250px; /* largura da sidebar expandida */
 }
 
+/* === CABEÇALHO DE INDICADORES === */
+.header-cards {
+  display: flex;
+  flex-wrap: wrap; /* permite quebra automática */
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.header-card {
+  flex: 1 1 250px; /* mínimo de 250px e ajustável */
+  max-width: 350px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 /* === RESPONSIVIDADE === */
 
 /* Tablet (até 991px) */
