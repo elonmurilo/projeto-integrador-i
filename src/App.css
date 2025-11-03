@@ -293,12 +293,12 @@ html, body {
 
 /* Área principal do conteúdo */
 .main-content {
-  margin-left: 80px; /* largura da sidebar recolhida */
-  padding: 1.5rem;
-  transition: margin-left 0.3s ease;
-  min-height: 100vh;
+  flex-grow: 1;
   background-color: #f4f8ff;
   box-sizing: border-box;
+  min-height: 100vh;
+  padding: 2rem 1.5rem; /* espaçamento interno para todo o conteúdo */
+  transition: margin-left 0.3s ease;
 }
 
 /* Quando a sidebar expande */
@@ -337,7 +337,7 @@ html, body {
 /* Tablet (até 991px) */
 @media (max-width: 991px) {
   .main-content {
-    margin-left: 70px;
+    margin-left:0;
     padding: 1rem;
   }
 
