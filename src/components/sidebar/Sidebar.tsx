@@ -138,14 +138,101 @@ export const Sidebar: React.FC = () => {
       <Offcanvas
         show={show}
         onHide={() => setShow(false)}
-        className="d-md-none"
+        className="d-md-none offcanvas-cleantrack"
         placement="start"
       >
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Menu</Offcanvas.Title>
+        <Offcanvas.Header closeButton className="offcanvas-header-custom">
+          <div className="d-flex align-items-center w-100 justify-content-center">
+            <img src="/logo.png" alt="Logo CleanTrack" className="avatar me-2" />
+            <span className="logo-text-mobile">CleanTrack</span>
+          </div>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <MenuItems />
+          <ul className="sidebar-menu mobile-menu">
+            <li>
+              <button
+                className={location.pathname === "/" ? "active" : ""}
+                onClick={() => {
+                  navigate("/");
+                  setShow(false);
+                }}
+              >
+                <FaHome />
+                <span>Página Inicial</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={location.pathname === "/servicos" ? "active" : ""}
+                onClick={() => {
+                  navigate("/servicos");
+                  setShow(false);
+                }}
+              >
+                <FaCalendarAlt />
+                <span>Serviços</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={location.pathname.startsWith("/clientes") ? "active" : ""}
+                onClick={() => {
+                  navigate("/clientes");
+                  setShow(false);
+                }}
+              >
+                <FaUser />
+                <span>Clientes</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={location.pathname.startsWith("/faturamento") ? "active" : ""}
+                onClick={() => {
+                  navigate("/faturamento");
+                  setShow(false);
+                }}
+              >
+                <FaMoneyBill />
+                <span>Faturamento</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={location.pathname === "/promocoes" ? "active" : ""}
+                onClick={() => {
+                  navigate("/promocoes");
+                  setShow(false);
+                }}
+              >
+                <FaTags />
+                <span>Promoções</span>
+              </button>
+            </li>
+            <li>
+              <button
+                className={location.pathname === "/ajuda" ? "active" : ""}
+                onClick={() => {
+                  navigate("/ajuda");
+                  setShow(false);
+                }}
+              >
+                <FaQuestion />
+                <span>Ajuda</span>
+              </button>
+            </li>
+          </ul>
+
+          <footer className="sidebar-footer text-center mt-4">
+            <img src="/avatar.png" alt="Foto do usuário" className="avatar" />
+            <div className="user-info mt-2">
+              <div className="name">{user?.user_metadata?.name || "Usuário"}</div>
+              <div className="role">Administrador(a)</div>
+            </div>
+            <button onClick={handleLogout} className="logout-button mt-2">
+              <CiLogout />
+            </button>
+          </footer>
         </Offcanvas.Body>
       </Offcanvas>
     </>
