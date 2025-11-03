@@ -301,15 +301,10 @@ html, body {
   transition: margin-left 0.3s ease;
 }
 
-/* === MARGEM DINÂMICA CONTROLADA POR ESTADO === */
-.app-container.expanded .main-content {
-  margin-left: 250px;
+/* Quando a sidebar expande */
+.sidebar:hover ~ .main-content {
+  margin-left: 250px; /* largura da sidebar expandida */
 }
-
-.app-container.collapsed .main-content {
-  margin-left: 80px;
-}
-
 
 /* === CABEÇALHO DE INDICADORES === */
 .header-cards {
@@ -342,14 +337,12 @@ html, body {
 /* Tablet (até 991px) */
 @media (max-width: 991px) {
   .main-content {
-    margin-left: 0 !important; /* Sidebar é controlada via Offcanvas */
+    margin-left:0;
     padding: 1rem;
   }
 
-  /* Garante que as margens dinâmicas não sejam aplicadas no tablet/mobile */
-  .app-container.expanded .main-content,
-  .app-container.collapsed .main-content {
-    margin-left: 0 !important;
+  .sidebar:hover ~ .main-content {
+    margin-left: 220px;
   }
 }
 

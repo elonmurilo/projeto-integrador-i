@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import { Sidebar } from "../components/sidebar/Sidebar";
@@ -11,9 +11,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
-  // Estado para controlar se a Sidebar está recolhida ou expandida
-  const [isCollapsed, setIsCollapsed] = useState(true);
-
   if (loading) {
     return <div>Carregando...</div>;
   }
@@ -23,11 +20,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   }
 
   return (
-    <div
-      className={`app-container ${isCollapsed ? "collapsed" : "expanded"}`}
-      style={{ display: "flex", minHeight: "100vh", width: "100%" }}
-    >
-      <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <Sidebar />
       <main className="main-content" style={{ flexGrow: 1 }}>
         {children}
       </main>
