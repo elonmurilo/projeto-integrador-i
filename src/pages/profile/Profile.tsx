@@ -10,7 +10,6 @@ export const Profile: React.FC = () => {
 
   return (
     <Container>
-      {user && <Sidebar />}
       <Title>Perfil do Usuário</Title>
       <Subtitle>Gerencie suas informações de conta.</Subtitle>
       {user && (

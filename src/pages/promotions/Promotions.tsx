@@ -10,7 +10,6 @@ export const Promotions: React.FC = () => {
 
   return (
     <Container>
-      {user && <Sidebar />}
       <Title>Promoções</Title>
       <Subtitle>Crie e gerencie campanhas promocionais para atrair mais clientes.</Subtitle>
     </Container>

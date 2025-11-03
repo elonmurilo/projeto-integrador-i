@@ -1,6 +1,7 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { Sidebar } from "../components/sidebar/Sidebar";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -18,5 +19,12 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/auth/login" state={{ from: location }} replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <div style={{ display: "flex", minHeight: "100vh", width: "100%" }}>
+      <Sidebar />
+      <main className="main-content" style={{ flexGrow: 1 }}>
+        {children}
+      </main>
+    </div>
+  );
 };

@@ -94,7 +94,6 @@ export const Services: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: "#eef4ff", minHeight: "100vh" }}>
-      {user && <Sidebar />}
 
       {/* Ajuste de responsividade: padding controlado via CSS */}
       <main className="container-fluid py-4 main-content">

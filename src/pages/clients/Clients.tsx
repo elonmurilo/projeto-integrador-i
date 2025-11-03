@@ -42,7 +42,6 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
 
   return (
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
-      {user && <Sidebar />}
 
       {/* 🔹 Área principal do conteúdo */}
       <main

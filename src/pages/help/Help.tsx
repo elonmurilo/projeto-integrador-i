@@ -10,7 +10,6 @@ export const Help: React.FC = () => {
 
   return (
     <Container>
-      {user && <Sidebar />}
       <Title>Ajuda</Title>
       <Subtitle>Encontre orientações sobre o uso do sistema e suporte técnico.</Subtitle>
     </Container>
