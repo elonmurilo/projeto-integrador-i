@@ -45,13 +45,12 @@ export const Header: React.FC = () => {
 
       {/* Container principal de status */}
       <div
-        className="status d-flex flex-wrap justify-content-around align-items-center text-center flex-grow-1"
+        className="status d-flex justify-content-around align-items-center text-center flex-grow-1 header-status"
         style={{
           ...(styles.headerContainer as React.CSSProperties),
-          minWidth: "280px",
+          margin: "0 auto",
+          width: "100%",
           maxWidth: "950px",
-          marginLeft: "auto",
-          marginRight: "auto",
         }}
       >
         {/* Total de Serviços Hoje */}
