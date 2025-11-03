@@ -28,7 +28,7 @@ export const Header: React.FC = () => {
 
   return (
     <div
-      className="d-flex justify-content-start align-items-start flex-nowrap mb-4 px-3"
+      className="d-flex flex-wrap justify-content-center align-items-start mb-4 px-3 header-container"
       style={{ gap: "2rem" }}
     >
       {/* Botão de cadastro */}
@@ -45,10 +45,10 @@ export const Header: React.FC = () => {
 
       {/* Container principal de status */}
       <div
-        className="status d-flex justify-content-around align-items-center text-center flex-grow-1"
+        className="status d-flex flex-wrap justify-content-around align-items-center text-center flex-grow-1"
         style={{
           ...(styles.headerContainer as React.CSSProperties),
-          minWidth: "750px",
+          minWidth: "280px",
           maxWidth: "950px",
           marginLeft: "auto",
           marginRight: "auto",
@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
       >
         {/* Total de Serviços Hoje */}
         <div
-          className="service-total d-flex align-items-center justify-content-center"
+          className="service-total d-flex align-items-center justify-content-center flex-fill metric-card"
           style={styles.serviceTotal as React.CSSProperties}
         >
           <ClientsIcon width={60} height={60} />
@@ -68,11 +68,12 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        <div className="divider" style={styles.divider} />
+        {/* Divisor — visível apenas em desktop */}
+        <div className="divider d-none d-md-block" style={styles.divider} />
 
         {/* Total de Clientes */}
         <div
-          className="client-total d-flex align-items-center justify-content-center"
+          className="client-total d-flex align-items-center justify-content-center flex-fill metric-card"
           style={styles.clientTotal as React.CSSProperties}
         >
           <ClientIcon width={60} height={60} />
@@ -84,11 +85,11 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        <div className="divider" style={styles.divider} />
+        <div className="divider d-none d-md-block" style={styles.divider} />
 
         {/* Total de Serviços do Mês */}
         <div
-          className="month-service-total d-flex align-items-center justify-content-center"
+          className="month-service-total d-flex align-items-center justify-content-center flex-fill metric-card"
           style={styles.monthServiceTotal as React.CSSProperties}
         >
           <ServicesIcon width={60} height={60} />

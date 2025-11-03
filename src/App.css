@@ -395,6 +395,30 @@ html, body {
     font-size: 1rem;
     text-align: center;
   }
+
+  .header-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .status {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .metric-card {
+    width: 90%;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .metric-card svg {
+    width: 50px;
+    height: 50px;
+  }
 }
 
 /* Layout ultrapequeno (até 480px) */
