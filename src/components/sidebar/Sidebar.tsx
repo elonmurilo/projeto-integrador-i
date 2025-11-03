@@ -7,6 +7,7 @@ import {
   FaMoneyBill,
   FaTags,
   FaQuestion,
+  FaBars,
 } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { Offcanvas, Button } from "react-bootstrap";
@@ -116,14 +117,16 @@ export const Sidebar: React.FC = () => {
 
   return (
     <>
-      {/* === Botão hamburguer (aparece só no mobile) === */}
-      <Button
-        variant="light"
-        className="menu-toggle d-md-none position-fixed top-0 start-0 m-2 shadow-sm"
-        onClick={() => setShow(true)}
-      >
-        ☰
-      </Button>
+      {/* Botão de menu (mobile) */}
+      {!show && (
+        <Button
+          variant="light"
+          onClick={() => setShow(true)}
+          className="menu-toggle position-fixed m-3 d-md-none shadow-sm"
+        >
+          <FaBars size={20} />
+        </Button>
+      )}
 
       {/* === Sidebar fixa no desktop === */}
       <nav className="sidebar d-none d-md-flex flex-column">
