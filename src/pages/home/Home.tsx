@@ -10,7 +10,6 @@ export const Home: React.FC = () => {
 
   return (
     <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
-      {user && <Sidebar />}
 
       <main className="container-fluid py-4 main-content" style={styles.container}>
         <header className="mb-4">
