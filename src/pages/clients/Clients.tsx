@@ -1,14 +1,13 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Sidebar } from "../../components/sidebar/Sidebar";
 import { Modal } from "react-bootstrap";
 import { RegisterClientModal } from "../../components/modals/RegisterClientModal";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Search } from "../../components/common/Search";
 import { useRegisterClient } from "../../hooks/useRegisterClient";
 import { useClients } from "../../hooks/useClients";
-import "../../App.css"; // garante que os estilos globais estejam aplicados
 import { useLocation } from "react-router-dom";
+import "../../App.css";
 
 interface ClientsProps {
   isHomepage?: boolean;
@@ -40,36 +39,41 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
   } = useRegisterClient();
 
   const totalPages = Math.ceil(totalClients / 10);
-
   const location = useLocation();
 
   return (
     <div
+      className="clients-page"
       style={{
         backgroundColor: "#ddeeff",
         ...(location.pathname === "/clientes" && { minHeight: "100vh" }),
       }}
     >
-
-      {/* 🔹 Área principal do conteúdo */}
       <main
-        className={`container-fluid py-4 ${!isHomepage ? "main-content" : ""}`}
-        style={{ paddingRight: "60px" }}
+        className={`container-fluid py-4 ${
+          !isHomepage ? "main-content" : ""
+        }`}
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          paddingInline: "1rem",
+        }}
       >
-        {/* Saudação do usuário */}
+        {/* Saudação */}
         {!isHomepage && (
-          <h5 className="mb-4">
+          <h5 className="mb-4 text-center text-md-start">
             Olá {user?.user_metadata?.name || "Usuário"} 👋
           </h5>
         )}
 
+        {/* Seção principal */}
         <section
-          className="container p-4 bg-white rounded shadow-sm"
+          className="container p-3 p-md-4 bg-white rounded shadow-sm"
           aria-label="Gerenciamento de clientes"
         >
-          {/* Cabeçalho da seção de clientes */}
+          {/* Cabeçalho */}
           <header className="header-clientes">
-            <h5>Todos os Clientes</h5>
+            <h5 className="text-center text-md-start">Todos os Clientes</h5>
 
             <div className="actions">
               {!isHomepage && (
@@ -80,7 +84,6 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                   Cadastrar Novo Cliente
                 </button>
               )}
-
               <Search
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -90,9 +93,9 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
             </div>
           </header>
 
-          {/* Tabela de clientes */}
-          <div className="table-responsive">
-            <table className="table table-hover table-bordered align-middle">
+          {/* Tabela de Clientes */}
+          <div className="table-responsive mt-3">
+            <table className="table table-hover table-bordered align-middle mb-0">
               <thead className="table-light">
                 <tr>
                   <th>Nome do Cliente</th>
@@ -100,13 +103,13 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                   <th>E-mail</th>
                   <th>Carro</th>
                   <th>Placa</th>
-                  {!isHomepage ? <th>Ações</th> : null}
+                  {!isHomepage && <th>Ações</th>}
                 </tr>
               </thead>
               <tbody>
                 {loading && (
                   <tr>
-                    <td colSpan={7} className="text-center">
+                    <td colSpan={7} className="text-center py-3">
                       Carregando...
                     </td>
                   </tr>
@@ -114,7 +117,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
 
                 {!loading && clients.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="text-center">
+                    <td colSpan={7} className="text-center py-3">
                       Nenhum cliente encontrado.
                     </td>
                   </tr>
@@ -128,8 +131,8 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                       <td>{client.mail}</td>
                       <td>{client.carros?.[0]?.modelo || "—"}</td>
                       <td>{client.carros?.[0]?.placas?.placa || "—"}</td>
-                      {!isHomepage ? (
-                        <td className="d-flex gap-2 justify-content-evenly">
+                      {!isHomepage && (
+                        <td className="d-flex justify-content-evenly">
                           <FaEdit
                             style={{ cursor: "pointer", color: "#6C2BD9" }}
                             onClick={() => openRegisterClientModal(client)}
@@ -139,7 +142,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                             onClick={() => setClienteExcluindo(client)}
                           />
                         </td>
-                      ) : null}
+                      )}
                     </tr>
                   ))}
               </tbody>
@@ -147,14 +150,14 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
           </div>
 
           {/* Paginação */}
-          <footer className="d-flex justify-content-between align-items-center mt-3">
-            <small>
+          <footer className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2">
+            <small className="text-muted text-center text-md-start">
               Mostrando {clients.length} de {totalClients} cadastros encontrados
             </small>
 
             {totalPages > 1 && (
               <nav aria-label="Paginação dos clientes">
-                <ul className="pagination pagination-sm mb-0">
+                <ul className="pagination pagination-sm mb-0 justify-content-center justify-content-md-end">
                   <li
                     className={`page-item ${
                       currentPage === 1 ? "disabled" : ""
@@ -170,6 +173,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                       ‹
                     </span>
                   </li>
+
                   {Array.from({ length: totalPages }, (_, i) => (
                     <li
                       key={i + 1}
@@ -186,6 +190,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                       </span>
                     </li>
                   ))}
+
                   <li
                     className={`page-item ${
                       currentPage === totalPages ? "disabled" : ""
@@ -210,7 +215,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         </section>
       </main>
 
-      {/* Modal de cadastro/edição */}
+      {/* Modais */}
       {showModal && (
         <RegisterClientModal
           show={showModal}
@@ -220,7 +225,6 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         />
       )}
 
-      {/* Modal de confirmação de exclusão */}
       <Modal
         show={!!clienteExcluindo}
         onHide={() => setClienteExcluindo(null)}
@@ -231,7 +235,8 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
         </Modal.Header>
         <Modal.Body>
           Tem certeza de que deseja remover o cliente{" "}
-          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser desfeita.
+          <strong>{clienteExcluindo?.nome}</strong>? Esta ação não poderá ser
+          desfeita.
         </Modal.Body>
         <Modal.Footer>
           <button
