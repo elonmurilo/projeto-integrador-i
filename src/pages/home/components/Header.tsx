@@ -4,7 +4,6 @@ import { CircularButton, Label } from "../StyledComponents";
 import { ReactComponent as ClientIcon } from "./svg/client-header.svg";
 import { ReactComponent as ServicesIcon } from "./svg/services-header.svg";
 import { ReactComponent as ClientsIcon } from "./svg/clients-header.svg";
-import { styles } from "../styles";
 import { useRegisterClient } from "../../../hooks/useRegisterClient";
 import { RegisterClientModal } from "../../../components/modals/RegisterClientModal";
 import { useClients } from "../../../hooks/useClients";
@@ -27,81 +26,58 @@ export const Header: React.FC = () => {
   const dailyServicesCount = dailyServices.length;
 
   return (
-    <div
-      className="d-flex flex-wrap justify-content-center align-items-start mb-4 px-3 header-container"
-      style={{ gap: "2rem" }}
-    >
-      {/* Botão de cadastro */}
-      <div className="button d-flex flex-column align-items-center">
-        <CircularButton
-          onClick={() => openRegisterClientModal()}
-          aria-label="Cadastrar novo cliente"
-          title="Cadastrar novo cliente"
-        >
-          <FaRegUser size={30} color="black" />
-        </CircularButton>
-        <Label className="mt-2 text-center">Cadastrar Novo Cliente</Label>
+    <header className="header">
+      {/* Saudação e botão de novo cliente */}
+      <div className="header-top">
+        <div className="user-section">
+          <CircularButton
+            onClick={openRegisterClientModal}
+            aria-label="Cadastrar novo cliente"
+            title="Cadastrar novo cliente"
+          >
+            <FaRegUser size={28} color="black" />
+          </CircularButton>
+          <Label className="mt-2 text-center">Cadastrar Novo Cliente</Label>
+        </div>
       </div>
 
-      {/* Container principal de status */}
-      <div
-        className="status d-flex justify-content-around align-items-center text-center flex-grow-1 header-status"
-        style={{
-          ...(styles.headerContainer as React.CSSProperties),
-          margin: "0 auto",
-          width: "100%",
-          maxWidth: "950px",
-        }}
-      >
+      {/* Cards de status */}
+      <div className="metrics">
         {/* Total de Serviços Hoje */}
-        <div
-          className="service-total d-flex align-items-center justify-content-center flex-fill metric-card"
-          style={styles.serviceTotal as React.CSSProperties}
-        >
-          <ClientsIcon width={60} height={60} />
-          <div style={styles.statusTextContainer as React.CSSProperties}>
-            <span style={styles.headerTitle}>Total de Serviços Hoje</span>
-            <span style={styles.statusNumber}>
-              {loadingDailyServices ? "Carregando..." : dailyServicesCount}
+        <div className="metric-card">
+          <ClientsIcon width={50} height={50} />
+          <div className="metric-info">
+            <span className="metric-title">Total de Serviços Hoje</span>
+            <span className="metric-value">
+              {loadingDailyServices ? "..." : dailyServicesCount}
             </span>
           </div>
         </div>
-
-        {/* Divisor — visível apenas em desktop */}
-        <div className="divider d-none d-md-block" style={styles.divider} />
 
         {/* Total de Clientes */}
-        <div
-          className="client-total d-flex align-items-center justify-content-center flex-fill metric-card"
-          style={styles.clientTotal as React.CSSProperties}
-        >
-          <ClientIcon width={60} height={60} />
-          <div style={styles.statusTextContainer as React.CSSProperties}>
-            <span style={styles.headerTitle}>Clientes</span>
-            <span style={styles.statusNumber}>
-              {loadingClients ? "Carregando..." : totalClients}
+        <div className="metric-card">
+          <ClientIcon width={50} height={50} />
+          <div className="metric-info">
+            <span className="metric-title">Clientes</span>
+            <span className="metric-value">
+              {loadingClients ? "..." : totalClients}
             </span>
           </div>
         </div>
 
-        <div className="divider d-none d-md-block" style={styles.divider} />
-
         {/* Total de Serviços do Mês */}
-        <div
-          className="month-service-total d-flex align-items-center justify-content-center flex-fill metric-card"
-          style={styles.monthServiceTotal as React.CSSProperties}
-        >
-          <ServicesIcon width={60} height={60} />
-          <div style={styles.statusTextContainer as React.CSSProperties}>
-            <span style={styles.headerTitle}>Total de Serviços do Mês</span>
-            <span style={styles.statusNumber}>
-              {loadingTotalServices ? "Carregando..." : totalServices}
+        <div className="metric-card">
+          <ServicesIcon width={50} height={50} />
+          <div className="metric-info">
+            <span className="metric-title">Total de Serviços do Mês</span>
+            <span className="metric-value">
+              {loadingTotalServices ? "..." : totalServices}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modal de cadastro */}
       {showModal && (
         <RegisterClientModal
           show={showModal}
@@ -110,6 +86,6 @@ export const Header: React.FC = () => {
           clienteEditando={clienteEditando}
         />
       )}
-    </div>
+    </header>
   );
 };

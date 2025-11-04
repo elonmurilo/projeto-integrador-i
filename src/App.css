@@ -1,7 +1,9 @@
-/* === Estrutura padrão da aplicação React === */
-.App {
-  text-align: center;
-}
+/* =====================================================
+   🌎 BASE GLOBAL DA APLICAÇÃO
+   ===================================================== */
+
+/* Estrutura padrão React */
+.App { text-align: center; }
 
 .App-logo {
   height: 40vmin;
@@ -9,162 +11,41 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
+  .App-logo { animation: App-logo-spin infinite 20s linear; }
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
-/* === ESTILOS GLOBAIS DE ACESSIBILIDADE === */
+/* Evita zoom automático em iOS */
+html { -webkit-text-size-adjust: 100%; }
 
-/* Foco visível em campos de formulário */
+/* Impede elementos de exceder a viewport */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Contraste e tipografia */
+body,
+.container,
+.table,
+.table td,
+.table th {
+  color: #1c1c1c;
+}
+
+/* =====================================================
+   ♿ ACESSIBILIDADE E FOCO VISUAL
+   ===================================================== */
 form input:focus-visible,
 form select:focus-visible,
-form textarea:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-  box-shadow: none;
-  transition: outline 0.2s ease;
-}
-
-/* Foco visível em botões */
+form textarea:focus-visible,
 button:focus-visible,
-.btn:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 3px;
-  box-shadow: none;
-}
-
-/* Foco visível em botões dentro do modal (Bootstrap) */
-.modal-footer .btn:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-}
-
-/* Foco em links */
-a:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 3px;
-  border-radius: 3px;
-}
-
-/* Foco visível nos botões de fechar do modal */
-button.close:focus-visible,
-button.btn-close:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-  border-radius: 50%;
-}
-
-/* === CONTRASTE E LEGIBILIDADE === */
-.alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
-  border-color: #f5c6cb;
-  font-weight: 500;
-}
-
-.alert-success {
-  background-color: #d4edda;
-  color: #155724;
-  border-color: #c3e6cb;
-  font-weight: 500;
-}
-
-.btn-outline-danger {
-  color: #c82333;
-  border-color: #c82333;
-}
-
-.btn-outline-danger:hover {
-  background-color: #c82333;
-  color: #fff;
-}
-
-/* === Transição suave em elementos interativos === */
-button,
-a,
-input,
-select,
-textarea {
-  transition: all 0.2s ease-in-out;
-}
-
-/* === Evita zoom automático em iOS e melhora leitura === */
-html {
-  -webkit-text-size-adjust: 100%;
-}
-
-/* === Suporte a usuários com contraste elevado === */
-@media (prefers-contrast: more) {
-  *:focus-visible {
-    outline-color: #000;
-  }
-}
-
-/* === Checkboxes (Tipos de Serviço) === */
-.form-check-input:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px rgba(108, 43, 217, 0.3);
-  border-color: #6C2BD9;
-}
-
-/* === Selects longos === */
-select:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-  box-shadow: 0 0 0 3px rgba(108, 43, 217, 0.25);
-  border-color: #6C2BD9;
-}
-
-/* === Botões do Modal === */
-.modal-footer .btn:focus-visible {
-  outline: 2px solid #6C2BD9;
-  outline-offset: 2px;
-  transform: scale(1.02);
-  transition: transform 0.15s ease;
-}
-
-.modal-footer .btn:hover {
-  transform: scale(1.03);
-}
-
-/* === Checkboxes === */
-.form-check-input {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.form-check-input:checked {
-  border-color: #6C2BD9;
-  background-color: #6C2BD9;
-}
-
-/* === ACESSIBILIDADE E FOCO VISUAL === */
-button:focus-visible,
+.btn:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible,
@@ -175,16 +56,33 @@ textarea:focus-visible {
   transition: outline 0.2s ease;
 }
 
-/* Corrige contraste de textos */
-body,
-.container,
-.table,
-.table td,
-.table th {
-  color: #1c1c1c;
+button.close:focus-visible,
+button.btn-close:focus-visible {
+  border-radius: 50%;
 }
 
-/* Contraste para elementos desabilitados */
+@media (prefers-contrast: more) {
+  *:focus-visible { outline-color: #000; }
+}
+
+/* =====================================================
+   🧱 ELEMENTOS GERAIS (Botões, Alertas, Tabelas)
+   ===================================================== */
+.alert {
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+.alert-success { background: #e8f9f1; color: #146c43; }
+.alert-danger  { background: #fdecea; color: #b02a37; }
+
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s ease-in-out;
+}
+
 button:disabled,
 .page-item.disabled .page-link {
   opacity: 0.6;
@@ -217,24 +115,14 @@ button:disabled,
   background-color: #f7f3ff;
 }
 
-/* Contraste dentro de containers */
-.bg-white,
-.table-light,
-.card,
-.modal-content {
-  color: #1e1e1e;
-}
-
-/* === TABELA === */
-.table tbody tr:nth-child(even) {
-  background-color: #fafafa;
-}
+/* Tabelas */
+.table tbody tr:nth-child(even) { background-color: #fafafa; }
 .table tbody tr:hover {
   background-color: #f2ecff;
   transition: background-color 0.2s ease;
 }
 
-/* === PAGINAÇÃO === */
+/* Paginação */
 .pagination .page-link {
   color: #6C2BD9;
   border: 1px solid #ddd;
@@ -249,252 +137,143 @@ button:disabled,
   color: #fff;
 }
 
-/* === ALERTAS === */
-.alert {
-  font-size: 0.95rem;
-  border-radius: 8px;
-}
-.alert-success {
-  background-color: #e8f9f1;
-  color: #146c43;
-}
-.alert-danger {
-  background-color: #fdecea;
-  color: #b02a37;
-}
-
-/* === AJUSTES GERAIS === */
-:focus-visible {
-  scroll-margin: 100px;
-}
-::placeholder {
-  color: #777;
-  opacity: 1;
-}
-[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  background: #1c1c1c;
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 3px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-  transform: translateY(-1.8em);
-  pointer-events: none;
-}
-
-/* Impede que qualquer elemento exceda a largura da viewport */
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-  max-width: 100vw;
-}
-
-/* Área principal do conteúdo */
+/* =====================================================
+   🧩 LAYOUT PRINCIPAL
+   ===================================================== */
 .main-content {
-  margin-left: 28px; /* largura da sidebar recolhida */
+  margin-left: 28px;
   padding: 1.5rem;
-  transition: margin-left 0.3s ease;
   min-height: 100vh;
   background-color: #f4f8ff;
   box-sizing: border-box;
+  transition: margin-left 0.3s ease;
 }
 
-/* Quando a sidebar expande */
+/* Sidebar expandida */
 .sidebar:hover ~ .main-content {
-  margin-left: 250px; /* largura da sidebar expandida */
+  margin-left: 250px;
 }
 
-/* === CABEÇALHO DE INDICADORES === */
-.header-cards {
-  display: flex;
-  flex-wrap: wrap; /* permite quebra automática */
-  justify-content: center;
-  align-items: stretch;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-  width: 100%;
-  box-sizing: border-box;
-}
+/* =====================================================
+   🧾 HEADER MOBILE FIRST
+   ===================================================== */
 
-.header-card {
-  flex: 1 1 250px; /* mínimo de 250px e ajustável */
-  max-width: 350px;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 1rem 1.5rem;
+/* Base (Mobile) */
+.header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  padding: 1.2rem;
+  gap: 1.5rem;
+  background-color: #eef3fc;
 }
 
-.status .divider {
-  height: 50px;
-  width: 1px;
-  background-color: #e0e0e0;
-  margin: 0 1.5rem;
+.header-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* === RESPONSIVIDADE === */
-
-/* Tablet (até 991px) */
-@media (max-width: 991px) {
-  .main-content {
-    margin-left: 28px;
-    padding: 1rem;
-  }
-
-  .sidebar:hover ~ .main-content {
-    margin-left: 220px;
-  }
+.user-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Mobile (até 768px) */
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 0 !important; /* sidebar é offcanvas */
-    padding: 1rem;
-  }
-
-  .sidebar:hover ~ .main-content {
-    margin-left: 65px !important;
-  }
-
-  .d-flex,
-  .flex-wrap {
-    flex-direction: column !important;
-    align-items: stretch !important;
-  }
-
-  .card,
-  .bg-white {
-    margin-bottom: 1rem;
-    width: 100% !important;
-  }
-
-  .table-responsive,
-  table,
-  input,
-  select {
-    width: 100% !important;
-    font-size: 0.9rem;
-  }
-
-  th,
-  td {
-    white-space: nowrap;
-  }
-
-  h5,
-  h4,
-  h3 {
-    font-size: 1rem;
-    text-align: center;
-  }
-
-  .header-container {
-    gap: 2rem;
-    flex-wrap: nowrap;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .status {
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .metric-card {
-    width: 90%;
-    justify-content: flex-start;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .metric-card svg {
-    width: 50px;
-    height: 50px;
-  }
+.metrics {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
 }
 
-/* Layout ultrapequeno (até 480px) */
-@media (max-width: 480px) {
-  .sidebar {
-    width: 60px;
-  }
-
-  .main-content {
-    margin-left: 60px !important;
-    padding: 0.5rem;
-  }
-
-  .card,
-  .bg-white {
-    box-shadow: none;
-    border-radius: 8px;
-  }
-
-  button,
-  .btn {
-    font-size: 0.9rem;
-  }
+.metric-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  background: white;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  width: 100%;
 }
 
-/* ===== LAYOUT DESKTOP ===== */
-@media (min-width: 992px) {
-  .header-status {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: nowrap;
-    width: 100%;
-  }
-
-  .metric-card {
-    flex: 1;
-    min-width: 200px;
-    max-width: 300px;
-  }
+.metric-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-/* ===== LAYOUT TABLET ===== */
-@media (max-width: 991px) and (min-width: 769px) {
-  .header-container {
-    flex-direction: column;
-    align-items: center;
-  }
+.metric-title {
+  font-size: 0.9rem;
+  color: #666;
+}
 
-  .header-status {
+.metric-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #000;
+}
+
+/* =====================================================
+   💻 BREAKPOINTS PROGRESSIVOS
+   ===================================================== */
+
+/* Tablet */
+@media (min-width: 768px) {
+  .metrics {
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
-    width: 100%;
-    max-width: 720px;
   }
 
   .metric-card {
     flex: 1 1 45%;
-    min-width: 250px;
+    max-width: 300px;
+  }
+
+  .main-content {
+    padding: 1rem;
   }
 }
 
-/* === BLOQUEIA DUPLICAÇÕES ANTERIORES === */
-@media (max-width: 991px),
-(max-width: 768px),
-(max-width: 480px) {
-  .container-fluid {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+/* Desktop */
+@media (min-width: 1200px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 2rem 4rem;
+  }
+
+  .header-top {
+    flex: 0 0 200px;
+  }
+
+  .metrics {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+    max-width: 950px;
+  }
+
+  .metric-card {
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .main-content {
+    margin-left: 250px;
+    padding: 2rem;
   }
 }
 
-/* === HEADER DA PÁGINA DE CLIENTES === */
+/* =====================================================
+   📱 CLIENTES HEADER (herda do Mobile First)
+   ===================================================== */
 
 .header-clientes {
   display: flex;
@@ -513,22 +292,14 @@ html, body {
   justify-content: flex-end;
 }
 
-/* Responsividade específica para o header */
 @media (max-width: 768px) {
-  .main-content {
-    margin-left: 0 !important;
-    padding-top: 60px; /* espaço para botão menu */
-  }
-
   .header-clientes {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
   }
 
-  .header-clientes h5 {
-    text-align: center;
-  }
+  .header-clientes h5 { text-align: center; }
 
   .header-clientes .actions {
     flex-direction: column;
@@ -539,29 +310,5 @@ html, body {
   .header-clientes .actions button,
   .header-clientes .actions input {
     width: 100%;
-  }
-
-  .header-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .header-status {
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 100%;
-    gap: 1rem;
-    padding: 0 1rem;
-  }
-
-  .metric-card {
-    width: 100%;
-    max-width: 360px;
-  }
-
-  .metric-card svg {
-    width: 48px;
-    height: 48px;
   }
 }
