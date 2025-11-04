@@ -295,6 +295,52 @@ button:disabled,
 }
 
 /* =====================================================
+   💻 FATURAMENTO MOBILE FIRST
+   ===================================================== */
+
+.income-header-container {
+  width: 100%;
+}
+
+.income-goals-container {
+  width: 100%;
+}
+
+.income-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.income-cards .card {
+  flex: 1 1 220px;
+  min-width: 220px;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.income-cards .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.income-cards .card h5 {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 768px) {
+  .income-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .income-cards .card {
+    width: 90%;
+  }
+}
+
+/* =====================================================
    💻 BREAKPOINTS PROGRESSIVOS
    ===================================================== */
 

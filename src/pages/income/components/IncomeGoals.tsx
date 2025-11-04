@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import { useGoal } from "../../../hooks/useGoal";
 import { useServices } from "../../../hooks/useServices";
 
 export const IncomeGoals: React.FC = () => {
-  const { calculateTotalRevenue, getServiceMonths, getServiceYears } =
-    useServices();
+  const { calculateTotalRevenue, getServiceMonths, getServiceYears } = useServices();
   const { goal, loading, updateGoal } = useGoal();
 
   const [realized, setRealized] = useState<number>(0);
@@ -15,16 +14,15 @@ export const IncomeGoals: React.FC = () => {
   const currentMonth = getServiceMonths()[0];
   const currentYear = getServiceYears()[0];
 
+  // Atualiza valores ao carregar dados
   useEffect(() => {
     if (currentMonth && currentYear) {
       const totalRevenue = calculateTotalRevenue(currentMonth, currentYear);
-      setRealized(goal - totalRevenue);
+      setRealized(totalRevenue);
     }
   }, [goal, currentMonth, currentYear, calculateTotalRevenue]);
 
-  const handleGoalClick = () => {
-    setShowModal(true);
-  };
+  const handleGoalClick = () => setShowModal(true);
 
   const handleSave = async () => {
     await updateGoal(newGoal);
@@ -32,86 +30,79 @@ export const IncomeGoals: React.FC = () => {
   };
 
   if (loading) {
-    return <p>Carregando...</p>;
+    return (
+      <div className="text-center py-4">
+        <Spinner animation="border" size="sm" /> Carregando...
+      </div>
+    );
   }
 
-  const percentageRealized = ((goal - realized) / goal) * 100;
+  const difference = goal - realized;
+  const percentageRealized = goal > 0 ? (realized / goal) * 100 : 0;
 
   return (
-    <div className="container-fluid">
-      <div className="row">
-        <div className="col-12">
-          <h2 className="mb-4 text-center text-md-left">
-            FATURAMENTO REALIZADO X META
-          </h2>
-        </div>
-      </div>
-      <div className="row">
-        {/* Card Meta */}
-        <div className="col-12 col-sm-6 col-md-4 mb-3">
-          <div
-            className="card text-center p-3"
-            style={{ cursor: "pointer", backgroundColor: "#EFFFF6" }}
-            onClick={handleGoalClick}
-          >
-            <div className="card-body">
-              <h5 className="card-title">Meta</h5>
-              <p
-                className="card-text text-truncate"
-                style={{ fontSize: "1.2rem" }}
-              >
-                {`R$ ${goal.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}`}
-              </p>
-            </div>
+    <div className="income-goals-container">
+      <h4 className="mb-4 text-center text-md-start fw-semibold">
+        Faturamento Realizado x Meta
+      </h4>
+
+      {/* === Cards de Meta, Realizado e % === */}
+      <div className="income-cards">
+        {/* Meta */}
+        <div
+          className="card text-center p-3 shadow-sm border-0 rounded-4 goal-card"
+          style={{ backgroundColor: "#EFFFF6", cursor: "pointer" }}
+          onClick={handleGoalClick}
+        >
+          <div className="card-body">
+            <h6 className="fw-semibold text-success mb-1">Meta</h6>
+            <h5 className="fw-bold">{`R$ ${goal.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}`}</h5>
           </div>
         </div>
 
-        {/* Card Realizado */}
-        <div className="col-12 col-sm-6 col-md-4 mb-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <h5 className="card-title">Realizado</h5>
-              <p
-                className="card-text text-truncate"
-                style={{ fontSize: "1.2rem" }}
-              >
-                {`R$ ${realized.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}`}
-              </p>
-            </div>
+        {/* Realizado */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <h6 className="fw-semibold text-primary mb-1">Realizado</h6>
+            <h5 className="fw-bold">{`R$ ${realized.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}`}</h5>
           </div>
         </div>
 
-        {/* Card % Realizado */}
-        <div className="col-12 col-sm-6 col-md-4 mb-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <h5 className="card-title">% Realizado</h5>
-              <p
-                className="card-text text-truncate"
-                style={{ fontSize: "1.2rem" }}
-              >
-                {`${percentageRealized.toFixed(2)} %`}
-              </p>
-            </div>
+        {/* % Realizado */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <h6 className="fw-semibold text-warning mb-1">% Realização</h6>
+            <h5 className="fw-bold">{`${percentageRealized.toFixed(2)} %`}</h5>
+          </div>
+        </div>
+
+        {/* Diferença restante */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <h6 className="fw-semibold text-danger mb-1">Restante p/ Meta</h6>
+            <h5 className="fw-bold">{`R$ ${difference.toLocaleString("pt-BR", {
+              minimumFractionDigits: 2,
+            })}`}</h5>
           </div>
         </div>
       </div>
 
-      {/* Modal para alterar a meta */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      {/* === Modal para edição da meta === */}
+      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Alterar Meta</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="formNewGoal">
-              <Form.Label>Nova Meta</Form.Label>
+              <Form.Label>Nova Meta (R$)</Form.Label>
               <Form.Control
                 type="number"
+                min={0}
                 value={newGoal}
                 onChange={(e) => setNewGoal(Number(e.target.value))}
                 style={{ maxWidth: "100%" }}

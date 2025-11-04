@@ -7,6 +7,7 @@ import {
 } from "react-icons/fa";
 import { useServices } from "../../../hooks/useServices";
 import { User } from "@supabase/auth-js";
+import { Spinner } from "react-bootstrap";
 
 interface IncomeHeaderProps {
   user: User | null;
@@ -49,7 +50,6 @@ export const IncomeHeader: React.FC<IncomeHeaderProps> = ({ user }) => {
       const revenue = calculateTotalRevenue(selectedMonth, selectedYear);
       setTotalRevenue(revenue);
 
-      // Chama a função assíncrona para buscar novos clientes
       calculateNewMonthCustomers(selectedMonth, selectedYear).then((result) => {
         setNewCustomers(result);
       });
@@ -71,111 +71,112 @@ export const IncomeHeader: React.FC<IncomeHeaderProps> = ({ user }) => {
 
   if (loading) {
     return (
-      <div style={{ backgroundColor: "#ddeeff", minHeight: "100vh" }}>
-        <div className="container py-4">
-          <h2>Carregando...</h2>
-        </div>
+      <div className="text-center py-5">
+        <Spinner animation="border" size="sm" /> Carregando dados...
       </div>
     );
   }
 
   return (
-    <>
-      <div className="row align-items-center mb-4">
+    <div className="income-header-container">
+      {/* === Cabeçalho com filtros === */}
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-          <h5 className="mb-4">
-            Olá {user?.user_metadata?.name || "Usuário"} 👋
-          </h5>
+          <h5 className="mb-2">Olá {user?.user_metadata?.name || "Usuário"} 👋</h5>
+          <h4 className="fw-semibold mb-0 text-primary">
+            Análise de Faturamento
+          </h4>
         </div>
 
-        <div className="col">
-          <h2 className="mb-0">ANÁLISE DE FATURAMENTO</h2>
-        </div>
-        <div className="col-auto">
-          <label htmlFor="month-select" className="me-2">
-            Mês
-          </label>
-          <select
-            id="month-select"
-            className="form-select d-inline-block w-auto"
-            value={selectedMonth}
-            onChange={handleMonthChange}
-          >
-            {getServiceMonths().map((month, index) => (
-              <option key={index} value={month}>
-                {month}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="col-auto">
-          <label htmlFor="year-select" className="me-2">
-            Ano
-          </label>
-          <select
-            id="year-select"
-            className="form-select d-inline-block w-auto"
-            value={selectedYear}
-            onChange={handleYearChange}
-          >
-            {getServiceYears().map((year, index) => (
-              <option key={index} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <div className="row">
-        <div className="col-md-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <div className="fs-1 mb-2">
-                <FaDollarSign />
-              </div>
-              <h5 className="card-title">{`R$${totalRevenue.toFixed(2)}`}</h5>
-              <p className="card-text">Faturamento</p>
-            </div>
+        <div className="d-flex flex-wrap align-items-center gap-2">
+          <div>
+            <label htmlFor="month-select" className="me-2 fw-semibold">
+              Mês
+            </label>
+            <select
+              id="month-select"
+              className="form-select d-inline-block w-auto"
+              value={selectedMonth}
+              onChange={handleMonthChange}
+            >
+              {getServiceMonths().map((month, index) => (
+                <option key={index} value={month}>
+                  {month}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <div className="fs-1 mb-2">
-                <FaCarSide />
-              </div>
-              <h5 className="card-title">
-                {calculateMonthServices(selectedMonth, selectedYear)}
-              </h5>
-              <p className="card-text">Serviços Realizados</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <div className="fs-1 mb-2">
-                <FaChessPawn />
-              </div>
-              <h5 className="card-title">{newCustomers}</h5>
-              <p className="card-text">Clientes Novos</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-3">
-          <div className="card text-center p-3">
-            <div className="card-body">
-              <div className="fs-1 mb-2">
-                <FaChartLine />
-              </div>
-              <h5 className="card-title">
-                {calculateServiceGrowth(selectedMonth, selectedYear)}%
-              </h5>
-              <p className="card-text">Crescimento mês anterior</p>
-            </div>
+
+          <div>
+            <label htmlFor="year-select" className="me-2 fw-semibold">
+              Ano
+            </label>
+            <select
+              id="year-select"
+              className="form-select d-inline-block w-auto"
+              value={selectedYear}
+              onChange={handleYearChange}
+            >
+              {getServiceYears().map((year, index) => (
+                <option key={index} value={year}>
+                  {year}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
-    </>
+
+      {/* === Cards === */}
+      <div className="income-cards">
+        {/* Faturamento */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <div className="fs-1 mb-2 text-primary">
+              <FaDollarSign />
+            </div>
+            <h5 className="fw-bold mb-1">{`R$ ${totalRevenue.toFixed(2)}`}</h5>
+            <p className="text-muted small mb-0">Faturamento</p>
+          </div>
+        </div>
+
+        {/* Serviços realizados */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <div className="fs-1 mb-2 text-info">
+              <FaCarSide />
+            </div>
+            <h5 className="fw-bold mb-1">
+              {calculateMonthServices(selectedMonth, selectedYear)}
+            </h5>
+            <p className="text-muted small mb-0">Serviços Realizados</p>
+          </div>
+        </div>
+
+        {/* Clientes novos */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <div className="fs-1 mb-2 text-success">
+              <FaChessPawn />
+            </div>
+            <h5 className="fw-bold mb-1">{newCustomers}</h5>
+            <p className="text-muted small mb-0">Clientes Novos</p>
+          </div>
+        </div>
+
+        {/* Crescimento */}
+        <div className="card text-center p-3 shadow-sm border-0 rounded-4">
+          <div className="card-body">
+            <div className="fs-1 mb-2 text-warning">
+              <FaChartLine />
+            </div>
+            <h5 className="fw-bold mb-1">
+              {calculateServiceGrowth(selectedMonth, selectedYear)}%
+            </h5>
+            <p className="text-muted small mb-0">Crescimento Mês Anterior</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
