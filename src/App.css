@@ -29,6 +29,11 @@ html, body {
   max-width: 100vw;
 }
 
+/* Garante que o fundo azul seja aplicado no body */
+body {
+  background-color: #ddeeff !important;
+}
+
 /* Contraste e tipografia */
 body,
 .container,

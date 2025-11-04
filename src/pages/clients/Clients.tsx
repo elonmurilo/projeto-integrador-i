@@ -48,7 +48,6 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
     <div
       className="clients-page"
       style={{
-        backgroundColor: "#ddeeff",
         ...(location.pathname === "/clientes" && { minHeight: "100vh" }),
       }}
     >
