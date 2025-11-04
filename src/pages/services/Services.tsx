@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Sidebar } from "../../components/sidebar/Sidebar";
-import { Button, Table, Spinner } from "react-bootstrap";
+import { Button, Spinner, Modal } from "react-bootstrap";
 import { supabase } from "../../config/supabase";
 import { RegisterServiceModal } from "../../components/modals/RegisterServiceModal";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import "../../App.css";
 
 export const Services: React.FC = () => {
   const { user } = useAuth();
@@ -14,11 +14,11 @@ export const Services: React.FC = () => {
   const [serviceEditing, setServiceEditing] = useState<any | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
+  const [serviceDeleting, setServiceDeleting] = useState<any | null>(null);
   const pageSize = 10;
 
   const fetchServicos = async () => {
     setLoading(true);
-
     const from = (currentPage - 1) * pageSize;
     const to = from + pageSize - 1;
 
@@ -48,7 +48,6 @@ export const Services: React.FC = () => {
       setAgendamentos(data || []);
       setTotalRecords(count || 0);
     }
-
     setLoading(false);
   };
 
@@ -61,51 +60,67 @@ export const Services: React.FC = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (agendamento: any) => {
-    const confirmDelete = window.confirm(
-      `Deseja realmente excluir o serviço agendado para ${agendamento.clientes?.nome}?`
-    );
-    if (!confirmDelete) return;
+  const handleDelete = async () => {
+    if (!serviceDeleting) return;
 
     try {
       const { error: errAgendaServico } = await supabase
         .from("agenda_servico")
         .delete()
-        .eq("id_rea", agendamento.id_rea);
+        .eq("id_rea", serviceDeleting.id_rea);
       if (errAgendaServico) throw errAgendaServico;
 
       const { error: errAgenda } = await supabase
         .from("agenda")
         .delete()
-        .eq("id_rea", agendamento.id_rea);
+        .eq("id_rea", serviceDeleting.id_rea);
       if (errAgenda) throw errAgenda;
 
       const { error: errServico } = await supabase
         .from("servicos")
         .delete()
-        .eq("id_serv", agendamento.servicos?.id_serv);
+        .eq("id_serv", serviceDeleting.servicos?.id_serv);
       if (errServico) throw errServico;
 
+      setServiceDeleting(null);
       fetchServicos();
     } catch (error) {
       alert("Erro ao excluir serviço. Tente novamente.");
     }
   };
 
-  return (
-    <div style={{ backgroundColor: "#eef4ff", minHeight: "100vh" }}>
+  const totalPages = Math.ceil(totalRecords / pageSize);
+  const isMobile = window.innerWidth <= 768;
 
-      {/* Ajuste de responsividade: padding controlado via CSS */}
-      <main className="container-fluid py-4 main-content">
-        <header className="mb-4">
+  return (
+    <div
+      className="services-page"
+      style={{
+        backgroundColor: "#ddeeff",
+        minHeight: "100vh",
+      }}
+    >
+      <main
+        className="container-fluid py-4 main-content"
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          paddingInline: window.innerWidth > 991 ? "2rem" : "1rem",
+          transition: "padding 0.3s ease",
+        }}
+      >
+        <header className="mb-4 text-center text-md-start">
           <h5>Olá {user?.user_metadata?.name || "Usuário"} 👋</h5>
         </header>
 
         <section
-          className="container p-4 bg-white rounded shadow-sm"
+          className="container p-3 p-md-4 bg-white rounded shadow-sm"
           aria-label="Gerenciamento de serviços"
         >
-          <div className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+          <header className="d-flex justify-content-between align-items-center flex-wrap mb-3">
+            <h5 className="text-center text-md-start mb-3 mb-md-0">
+              Todos os Serviços
+            </h5>
             <Button
               variant="primary"
               style={{ backgroundColor: "#B197FC", border: "none" }}
@@ -113,105 +128,136 @@ export const Services: React.FC = () => {
                 setServiceEditing(null);
                 setShowModal(true);
               }}
-              aria-label="Cadastrar novo serviço"
-              title="Cadastrar novo serviço"
             >
               Cadastrar Novo Serviço
             </Button>
-          </div>
+          </header>
 
-          <div aria-live="polite">
-            <Table bordered hover responsive>
-              <thead className="table-light">
-                <tr>
-                  <th scope="col">Cliente</th>
-                  <th scope="col">Carro</th>
-                  <th scope="col">Porte</th>
-                  <th scope="col">Data</th>
-                  <th scope="col">Hora</th>
-                  <th scope="col">Valor (R$)</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading && (
+          {/* Renderização híbrida */}
+          {isMobile ? (
+            <div className="service-cards mt-3">
+              {loading && (
+                <p className="text-center text-muted py-3">
+                  <Spinner animation="border" size="sm" /> Carregando...
+                </p>
+              )}
+              {!loading && agendamentos.length === 0 && (
+                <p className="text-center text-muted py-3">
+                  Nenhum serviço agendado.
+                </p>
+              )}
+              {!loading &&
+                agendamentos.map((a) => (
+                  <div key={a.id_rea} className="service-card">
+                    <div className="service-info">
+                      <strong>{a.clientes?.nome}</strong>
+                      <p>
+                        🚗 {a.carros?.marca} {a.carros?.modelo} —{" "}
+                        {a.carros?.placas?.placa || "—"}
+                      </p>
+                      <p>📅 {a.data_rea} às {a.hora_rea}</p>
+                      <p>💰 R$ {parseFloat(a.servicos?.valor || 0).toFixed(2)}</p>
+                    </div>
+                    <div className="actions">
+                      <FaEdit
+                        style={{ cursor: "pointer", color: "#6C2BD9" }}
+                        onClick={() => handleEdit(a)}
+                      />
+                      <FaTrash
+                        style={{ cursor: "pointer", color: "#D9534F" }}
+                        onClick={() => setServiceDeleting(a)}
+                      />
+                    </div>
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-hover table-bordered align-middle mb-0">
+                <thead className="table-light">
                   <tr>
-                    <td colSpan={7} className="text-center">
-                      <Spinner animation="border" size="sm" /> Carregando...
-                    </td>
+                    <th>Cliente</th>
+                    <th>Carro</th>
+                    <th>Porte</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Valor (R$)</th>
+                    <th>Ações</th>
                   </tr>
-                )}
-                {!loading && agendamentos.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="text-center">
-                      Nenhum serviço agendado.
-                    </td>
-                  </tr>
-                )}
-                {!loading &&
-                  agendamentos.map((a) => (
-                    <tr key={a.id_rea}>
-                      <td>{a.clientes?.nome}</td>
-                      <td>
-                        {a.carros?.placas?.placa || "—"} — {a.carros?.marca}{" "}
-                        {a.carros?.modelo}
-                      </td>
-                      <td>{a.carros?.id_por}</td>
-                      <td>{a.data_rea}</td>
-                      <td>{a.hora_rea}</td>
-                      <td>{parseFloat(a.servicos?.valor || 0).toFixed(2)}</td>
-                      <td className="d-flex gap-2 justify-content-center">
-                        <button
-                          onClick={() => handleEdit(a)}
-                          className="btn btn-sm btn-outline-primary"
-                          aria-label={`Editar serviço de ${a.clientes?.nome}`}
-                          title="Editar serviço"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(a)}
-                          className="btn btn-sm btn-outline-danger"
-                          aria-label={`Excluir serviço de ${a.clientes?.nome}`}
-                          title="Excluir serviço"
-                        >
-                          <FaTrash />
-                        </button>
+                </thead>
+                <tbody>
+                  {loading && (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        <Spinner animation="border" size="sm" /> Carregando...
                       </td>
                     </tr>
-                  ))}
-              </tbody>
-            </Table>
-          </div>
+                  )}
+                  {!loading && agendamentos.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        Nenhum serviço agendado.
+                      </td>
+                    </tr>
+                  )}
+                  {!loading &&
+                    agendamentos.map((a) => (
+                      <tr key={a.id_rea}>
+                        <td>{a.clientes?.nome}</td>
+                        <td>
+                          {a.carros?.placas?.placa || "—"} — {a.carros?.marca}{" "}
+                          {a.carros?.modelo}
+                        </td>
+                        <td>{a.carros?.id_por}</td>
+                        <td>{a.data_rea}</td>
+                        <td>{a.hora_rea}</td>
+                        <td>{parseFloat(a.servicos?.valor || 0).toFixed(2)}</td>
+                        <td className="d-flex gap-2 justify-content-center">
+                          <button
+                            onClick={() => handleEdit(a)}
+                            className="btn btn-sm btn-outline-primary"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            onClick={() => setServiceDeleting(a)}
+                            className="btn btn-sm btn-outline-danger"
+                          >
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
-          {totalRecords > pageSize && (
-            <nav
-              className="d-flex justify-content-between align-items-center mt-3"
-              aria-label="Paginação dos serviços"
-            >
-              <small>
-                Mostrando {agendamentos.length} de {totalRecords} agendamentos
-                encontrados
+          {/* Paginação */}
+          {totalPages > 1 && (
+            <footer className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2">
+              <small className="text-muted">
+                Mostrando {agendamentos.length} de {totalRecords} registros
               </small>
-              <ul className="pagination pagination-sm mb-0">
+              <ul className="pagination pagination-sm mb-0 justify-content-center justify-content-md-end">
                 <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
                   <button
                     className="page-link"
                     onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                    aria-label="Página anterior"
                   >
                     ‹
                   </button>
                 </li>
-                {Array.from({ length: Math.ceil(totalRecords / pageSize) }, (_, i) => (
+                {Array.from({ length: totalPages }, (_, i) => (
                   <li
                     key={i + 1}
-                    className={`page-item ${currentPage === i + 1 ? "active" : ""}`}
+                    className={`page-item ${
+                      currentPage === i + 1 ? "active" : ""
+                    }`}
                   >
                     <button
                       className="page-link"
                       onClick={() => setCurrentPage(i + 1)}
-                      aria-label={`Ir para página ${i + 1}`}
                     >
                       {i + 1}
                     </button>
@@ -219,29 +265,25 @@ export const Services: React.FC = () => {
                 ))}
                 <li
                   className={`page-item ${
-                    currentPage === Math.ceil(totalRecords / pageSize)
-                      ? "disabled"
-                      : ""
+                    currentPage === totalPages ? "disabled" : ""
                   }`}
                 >
                   <button
                     className="page-link"
                     onClick={() =>
-                      setCurrentPage((prev) =>
-                        Math.min(prev + 1, Math.ceil(totalRecords / pageSize))
-                      )
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                     }
-                    aria-label="Próxima página"
                   >
                     ›
                   </button>
                 </li>
               </ul>
-            </nav>
+            </footer>
           )}
         </section>
       </main>
 
+      {/* Modal de cadastro/edição */}
       {showModal && (
         <RegisterServiceModal
           show={showModal}
@@ -250,6 +292,25 @@ export const Services: React.FC = () => {
           servicoEditando={serviceEditing}
         />
       )}
+
+      {/* Modal de exclusão */}
+      <Modal show={!!serviceDeleting} onHide={() => setServiceDeleting(null)} centered>
+        <Modal.Header closeButton className="bg-danger text-white">
+          <Modal.Title>Confirmar Exclusão</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Deseja realmente excluir o serviço agendado para{" "}
+          <strong>{serviceDeleting?.clientes?.nome}</strong>? Esta ação não poderá ser desfeita.
+        </Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-secondary" onClick={() => setServiceDeleting(null)}>
+            Cancelar
+          </button>
+          <button className="btn btn-danger" onClick={handleDelete}>
+            Confirmar Remoção
+          </button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
