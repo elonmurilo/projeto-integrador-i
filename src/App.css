@@ -224,6 +224,39 @@ button:disabled,
 }
 
 /* =====================================================
+   💻 CLIENTS MOBILE FIRST
+   ===================================================== */
+
+.client-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.client-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.client-card .client-info p {
+  margin: 0.2rem 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.client-card .actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+/* =====================================================
    💻 BREAKPOINTS PROGRESSIVOS
    ===================================================== */
 

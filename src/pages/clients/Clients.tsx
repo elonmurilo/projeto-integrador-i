@@ -41,6 +41,9 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
   const totalPages = Math.ceil(totalClients / 10);
   const location = useLocation();
 
+  // Detecta se é mobile para alternar entre tabela e cards
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <div
       className="clients-page"
@@ -50,13 +53,12 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
       }}
     >
       <main
-        className={`container-fluid py-4 ${
-          !isHomepage ? "main-content" : ""
-        }`}
+        className={`container-fluid py-4 ${!isHomepage ? "main-content" : ""}`}
         style={{
           maxWidth: "1200px",
           margin: "0 auto",
-          paddingInline: "1rem",
+          paddingInline: window.innerWidth > 991 ? "2rem" : "1rem",
+          transition: "padding 0.3s ease",
         }}
       >
         {/* Saudação */}
@@ -93,61 +95,104 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
             </div>
           </header>
 
-          {/* Tabela de Clientes */}
-          <div className="table-responsive mt-3">
-            <table className="table table-hover table-bordered align-middle mb-0">
-              <thead className="table-light">
-                <tr>
-                  <th>Nome do Cliente</th>
-                  <th>Telefone</th>
-                  <th>E-mail</th>
-                  <th>Carro</th>
-                  <th>Placa</th>
-                  {!isHomepage && <th>Ações</th>}
-                </tr>
-              </thead>
-              <tbody>
-                {loading && (
-                  <tr>
-                    <td colSpan={7} className="text-center py-3">
-                      Carregando...
-                    </td>
-                  </tr>
-                )}
+          {/* Renderização híbrida */}
+          {isMobile ? (
+            <div className="client-cards mt-3">
+              {loading && (
+                <p className="text-center text-muted py-3">Carregando...</p>
+              )}
 
-                {!loading && clients.length === 0 && (
-                  <tr>
-                    <td colSpan={7} className="text-center py-3">
-                      Nenhum cliente encontrado.
-                    </td>
-                  </tr>
-                )}
+              {!loading && clients.length === 0 && (
+                <p className="text-center text-muted py-3">
+                  Nenhum cliente encontrado.
+                </p>
+              )}
 
-                {!loading &&
-                  clients.map((client, index) => (
-                    <tr key={index}>
-                      <td>{client.nome}</td>
-                      <td>{client.tel1}</td>
-                      <td>{client.mail}</td>
-                      <td>{client.carros?.[0]?.modelo || "—"}</td>
-                      <td>{client.carros?.[0]?.placas?.placa || "—"}</td>
-                      {!isHomepage && (
-                        <td className="d-flex justify-content-evenly">
-                          <FaEdit
-                            style={{ cursor: "pointer", color: "#6C2BD9" }}
-                            onClick={() => openRegisterClientModal(client)}
-                          />
-                          <FaTrash
-                            style={{ cursor: "pointer", color: "#D9534F" }}
-                            onClick={() => setClienteExcluindo(client)}
-                          />
-                        </td>
-                      )}
+              {!loading &&
+                clients.map((client, index) => (
+                  <div key={index} className="client-card">
+                    <div className="client-info">
+                      <strong>{client.nome}</strong>
+                      <p>📞 {client.tel1 || "—"}</p>
+                      <p>📧 {client.mail || "—"}</p>
+                      <p>
+                        🚗 {client.carros?.[0]?.modelo || "—"} •{" "}
+                        {client.carros?.[0]?.placas?.placa || "—"}
+                      </p>
+                    </div>
+                    {!isHomepage && (
+                      <div className="actions">
+                        <FaEdit
+                          title="Editar"
+                          style={{ cursor: "pointer", color: "#6C2BD9" }}
+                          onClick={() => openRegisterClientModal(client)}
+                        />
+                        <FaTrash
+                          title="Excluir"
+                          style={{ cursor: "pointer", color: "#D9534F" }}
+                          onClick={() => setClienteExcluindo(client)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+            </div>
+          ) : (
+            <div className="table-responsive mt-3">
+              <table className="table table-hover table-bordered align-middle mb-0">
+                <thead className="table-light">
+                  <tr>
+                    <th>Nome do Cliente</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Carro</th>
+                    <th>Placa</th>
+                    {!isHomepage && <th>Ações</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading && (
+                    <tr>
+                      <td colSpan={7} className="text-center py-3">
+                        Carregando...
+                      </td>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
+                  )}
+
+                  {!loading && clients.length === 0 && (
+                    <tr>
+                      <td colSpan={7} className="text-center py-3">
+                        Nenhum cliente encontrado.
+                      </td>
+                    </tr>
+                  )}
+
+                  {!loading &&
+                    clients.map((client, index) => (
+                      <tr key={index}>
+                        <td>{client.nome}</td>
+                        <td>{client.tel1}</td>
+                        <td>{client.mail}</td>
+                        <td>{client.carros?.[0]?.modelo || "—"}</td>
+                        <td>{client.carros?.[0]?.placas?.placa || "—"}</td>
+                        {!isHomepage && (
+                          <td className="d-flex justify-content-evenly">
+                            <FaEdit
+                              style={{ cursor: "pointer", color: "#6C2BD9" }}
+                              onClick={() => openRegisterClientModal(client)}
+                            />
+                            <FaTrash
+                              style={{ cursor: "pointer", color: "#D9534F" }}
+                              onClick={() => setClienteExcluindo(client)}
+                            />
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Paginação */}
           <footer className="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 gap-2">
