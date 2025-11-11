@@ -26,11 +26,28 @@ export const useClients = () => {
     const query = supabase
       .from("clientes")
       .select(
-        `id_cli, nome, tel1, mail, cpf_cnpj, ende, tel2, 
-         carros (
-           id_car, modelo, marca, ano, cor, id_por,
-           placas (id_pla, placa)
-         )`,
+        `
+        id_cli,
+        nome,
+        tel1,
+        tel2,
+        mail,
+        cpf_cnpj,
+        cep,
+        ende,
+        bairro,
+        cidade,
+        estado,
+        carros (
+          id_car,
+          modelo,
+          marca,
+          ano,
+          cor,
+          id_por,
+          placas (id_pla, placa)
+        )
+        `,
         { count: "exact" }
       )
       .range(from, to)

@@ -319,7 +319,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-2 mb-3">
+            <div className="col-md-1 mb-3">
               <Form.Label>Estado</Form.Label>
               <Form.Control
                 type="text"
@@ -337,7 +337,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-2 mb-3">
+            <div className="col-md-3 mb-3">
               <Form.Label>Telefone 1</Form.Label>
               <Form.Control
                 type="text"
