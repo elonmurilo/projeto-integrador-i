@@ -13,7 +13,8 @@ export const Home: React.FC = () => {
 
       <main className="container-fluid py-4 main-content" style={styles.container}>
         <header className="mb-4">
-          <h5>
+            <h5 style={{ marginLeft: "80px" }}>
+
             Olá {user?.user_metadata?.name || "Usuário"} 👋
           </h5>
         </header>
