@@ -17,6 +17,9 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
   clienteEditando,
 }) => {
   const [form, setForm] = useState({
+    id_cli: null as number | null,
+    id_car: null as number | null,
+    id_pla: null as number | null,
     nome: "",
     cpf_cnpj: "",
     cep: "",
@@ -43,6 +46,9 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
   useEffect(() => {
     if (clienteEditando) {
       setForm({
+        id_cli: clienteEditando.id_cli || null,
+        id_car: clienteEditando.carros?.[0]?.id_car || null,
+        id_pla: clienteEditando.carros?.[0]?.placas?.id_pla || null,
         nome: clienteEditando.nome || "",
         cpf_cnpj: clienteEditando.cpf_cnpj || "",
         cep: clienteEditando.cep || "",
@@ -62,6 +68,9 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
       });
     } else {
       setForm({
+        id_cli: null,
+        id_car: null,
+        id_pla: null,
         nome: "",
         cpf_cnpj: "",
         cep: "",
@@ -137,68 +146,86 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
     setMessage(null);
 
     try {
-      let clienteId = clienteEditando?.id_cli;
+      let clientId = form.id_cli;
+      let plateId = form.id_pla;
+      let carId = form.id_car;
 
-      // === 1️⃣ Upsert do cliente ===
-      const { data: clienteData, error: clienteError } = await supabase
-        .from("clientes")
-        .upsert(
-          {
-            id_cli: clienteId,
-            nome: form.nome,
-            cpf_cnpj: form.cpf_cnpj,
-            cep: form.cep,
-            ende: form.ende,
-            bairro: form.bairro,
-            cidade: form.cidade,
-            estado: form.estado,
-            mail: form.mail,
-            tel1: form.tel1,
-            tel2: form.tel2,
-          },
-          { onConflict: "id_cli" }
-        )
-        .select();
+      // === 1️⃣ CLIENTE ===
+      const clientData = {
+        nome: form.nome,
+        cpf_cnpj: form.cpf_cnpj,
+        cep: form.cep,
+        ende: form.ende,
+        bairro: form.bairro,
+        cidade: form.cidade,
+        estado: form.estado,
+        mail: form.mail,
+        tel1: form.tel1,
+        tel2: form.tel2,
+      };
 
-      if (clienteError) throw clienteError;
-
-      const savedClient = clienteData?.[0];
-      clienteId = savedClient.id_cli;
-
-      // === 2️⃣ Upsert da placa ===
-      let placaId: number | null = null;
-      if (form.placa) {
-        const { data: placaData, error: placaError } = await supabase
-          .from("placas")
-          .upsert(
-            {
-              placa: form.placa,
-              id_cli: clienteId,
-            },
-            { onConflict: "placa" }
-          )
-          .select();
-
-        if (placaError) throw placaError;
-        placaId = placaData?.[0]?.id_pla || null;
+      if (!clientId) {
+        const { data, error } = await supabase
+          .from("clientes")
+          .insert([clientData])
+          .select("id_cli")
+          .single();
+        if (error) throw error;
+        clientId = data.id_cli;
+      } else {
+        const { error } = await supabase
+          .from("clientes")
+          .update(clientData)
+          .eq("id_cli", clientId);
+        if (error) throw error;
       }
 
-      // === 3️⃣ Upsert do carro ===
-      if (placaId) {
-        const { error: carError } = await supabase.from("carros").upsert(
-          {
-            marca: form.marca,
-            modelo: form.modelo,
-            ano: form.ano,
-            cor: form.cor,
-            id_por: form.id_por,
-            id_cli: clienteId,
-            id_pla: placaId,
-          },
-          { onConflict: "id_cli" }
-        );
+      // === 2️⃣ PLACA ===
+      if (form.placa) {
+        const plateData = {
+          placa: form.placa,
+          id_cli: clientId,
+        };
 
-        if (carError) throw carError;
+        if (!plateId) {
+          const { data, error } = await supabase
+            .from("placas")
+            .insert([plateData])
+            .select("id_pla")
+            .single();
+          if (error) throw error;
+          plateId = data.id_pla;
+        } else {
+          const { error } = await supabase
+            .from("placas")
+            .update(plateData)
+            .eq("id_pla", plateId);
+          if (error) throw error;
+        }
+      }
+
+      // === 3️⃣ CARRO ===
+      if (form.marca || form.modelo) {
+        const carData = {
+          marca: form.marca,
+          modelo: form.modelo,
+          ano: form.ano,
+          cor: form.cor,
+          id_por: form.id_por,
+          id_cli: clientId,
+          id_pla: plateId!,
+        };
+
+        if (!carId) {
+          const { error } = await supabase.from("carros").insert([carData]);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from("carros")
+            .update(carData)
+            .eq("id_car", carId);
+          if (error) throw error;
+        }
       }
 
       setMessage({ text: "Cliente salvo com sucesso!", type: "success" });
@@ -219,7 +246,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
     <Modal show={show} onHide={onHide} centered size="lg">
       <Modal.Header closeButton>
         <Modal.Title>
-          {clienteEditando ? "Editar Cliente" : "Cadastrar Novo Cliente"}
+          {form.id_cli ? "Editar Cliente" : "Cadastrar Novo Cliente"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
