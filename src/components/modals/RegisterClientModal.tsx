@@ -99,8 +99,11 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
 
-    if (name === "cep" && value.length === 9) {
-      fetchAddressByCep(value);
+    if (name === "cep") {
+      const cleanCep = value.replace(/\D/g, ""); // remove tudo que não é número
+      if (cleanCep.length === 8) {
+        fetchAddressByCep(cleanCep);
+      }
     }
   };
 
