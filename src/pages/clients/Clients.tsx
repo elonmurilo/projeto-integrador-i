@@ -171,7 +171,7 @@ export const Clients: React.FC<ClientsProps> = ({ isHomepage }) => {
                         <td>{client.nome}</td>
                         <td>📞 {client.tel1}<br />📧 {client.mail}</td>
                         <td>🚗 {client.carros?.[0]?.modelo || "—"}<br />{client.carros?.[0]?.placas?.placa || "—"}</td>
-                        <td>🏠 {client.endereco || "-"} - {client.cep || "-"}</td>
+                        <td>🏠 {client.ende || "-"} - {client.cep || "-"}</td>
                         {!isHomepage && (
                           <td className="d-flex justify-content-evenly">
                             <FaEdit
