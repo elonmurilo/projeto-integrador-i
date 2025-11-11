@@ -210,7 +210,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
             {/* === DADOS DO CLIENTE === */}
             <h5 className="mb-3">🧝 Dados do Cliente</h5>
             <Row className="mb-3">
-              <Col md={4}>
+              <Col md={7}>
                 <Form.Group controlId="cliente-nome">
                   <Form.Label>Nome</Form.Label>
                   <Form.Control
@@ -221,7 +221,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={4}>
+              <Col md={5}>
                 <Form.Group controlId="cliente-cpf">
                   <Form.Label>CPF/CNPJ</Form.Label>
                   <Form.Control
@@ -231,7 +231,10 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={4}>
+            </Row>
+
+            <Row className="mb-3">
+              <Col md={2}>
                 <Form.Group controlId="cliente-cep">
                   <Form.Label>CEP</Form.Label>
                   <Form.Control
@@ -246,9 +249,6 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   )}
                 </Form.Group>
               </Col>
-            </Row>
-
-            <Row className="mb-3">
               <Col md={6}>
                 <Form.Group controlId="cliente-endereco">
                   <Form.Label>Endereço</Form.Label>
@@ -259,7 +259,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={3}>
+              <Col md={4}>
                 <Form.Group controlId="cliente-bairro">
                   <Form.Label>Bairro</Form.Label>
                   <Form.Control
@@ -269,6 +269,9 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
+            </Row>
+
+            <Row className="mb-3">
               <Col md={3}>
                 <Form.Group controlId="cliente-cidade">
                   <Form.Label>Cidade</Form.Label>
@@ -279,9 +282,6 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-            </Row>
-
-            <Row className="mb-3">
               <Col md={2}>
                 <Form.Group controlId="cliente-estado">
                   <Form.Label>Estado</Form.Label>
@@ -304,7 +304,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                   />
                 </Form.Group>
               </Col>
-              <Col md={5}>
+              <Col md={2}>
                 <Form.Group controlId="cliente-tel1">
                   <Form.Label>Telefone 1</Form.Label>
                   <Form.Control
