@@ -23,7 +23,7 @@ const FeedbackModal: React.FC<{
     </Modal.Header>
     <Modal.Body>{message}</Modal.Body>
     <Modal.Footer>
-      <Button variant={variant} onClick={onClose} aria-label="Fechar mensagem de confirmação">
+      <Button variant={variant} onClick={onClose}>
         Confirmar
       </Button>
     </Modal.Footer>
@@ -45,6 +45,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
   clienteEditando,
 }) => {
   const [form, setForm] = useState({
+    id_cli: "",
     nome: "",
     cep: "",
     ende: "",
@@ -95,6 +96,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
   useEffect(() => {
     if (cliente) {
       setForm({
+        id_cli: cliente.id_cli || "",
         nome: cliente.nome || "",
         cep: cliente.cep || "",
         ende: cliente.ende || "",
@@ -111,6 +113,27 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
         ano: cliente.carros?.[0]?.ano || "",
         cor: cliente.carros?.[0]?.cor || "",
         placa: cliente.carros?.[0]?.placas?.placa || "",
+      });
+    } else {
+      // limpa o formulário ao criar novo cliente
+      setForm({
+        id_cli: "",
+        nome: "",
+        cep: "",
+        ende: "",
+        bairro: "",
+        cidade: "",
+        estado: "",
+        tel1: "",
+        tel2: "",
+        mail: "",
+        cpf_cnpj: "",
+        id_por: "",
+        modelo: "",
+        marca: "",
+        ano: "",
+        cor: "",
+        placa: "",
       });
     }
   }, [cliente]);
@@ -162,21 +185,29 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
     try {
       const idPorNumber = Number(form.id_por) || 1;
 
-      // Exemplo: inserir ou atualizar cliente
-      const { error } = await supabase
-        .from("clientes")
-        .upsert({
-          nome: form.nome,
-          cep: form.cep,
-          ende: form.ende,
-          bairro: form.bairro,
-          cidade: form.cidade,
-          estado: form.estado,
-          tel1: form.tel1,
-          tel2: form.tel2,
-          mail: form.mail,
-          cpf_cnpj: form.cpf_cnpj,
-        });
+      // Monta o objeto para inserir ou atualizar
+      const payload: any = {
+        nome: form.nome,
+        cep: form.cep,
+        ende: form.ende,
+        bairro: form.bairro,
+        cidade: form.cidade,
+        estado: form.estado,
+        tel1: form.tel1,
+        tel2: form.tel2,
+        mail: form.mail,
+        cpf_cnpj: form.cpf_cnpj,
+        id_por: idPorNumber,
+      };
+
+      // Se for edição, inclui o ID
+      if (cliente) {
+        payload.id_cli = form.id_cli;
+      }
+
+      const { error } = await supabase.from("clientes").upsert(payload, {
+        onConflict: "id_cli", // garante atualização correta
+      });
 
       if (error) throw error;
 
@@ -201,7 +232,9 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
       <Modal show={show} onHide={onHide} size="xl" centered>
         <Form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>{cliente ? "Editar Cliente" : "Cadastrar Novo Cliente"}</Modal.Title>
+            <Modal.Title>
+              {cliente ? "Editar Cliente" : "Cadastrar Novo Cliente"}
+            </Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
