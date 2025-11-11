@@ -283,7 +283,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
           </div>
 
           <div className="row">
-            <div className="col-md-3 mb-3">
+            <div className="col-md-2 mb-3">
               <Form.Label>CEP</Form.Label>
               <Form.Control
                 type="text"
@@ -292,7 +292,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-5 mb-3">
+            <div className="col-md-10 mb-3">
               <Form.Label>Endereço</Form.Label>
               <Form.Control
                 type="text"
@@ -301,7 +301,10 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-4 mb-3">
+          </div>
+
+          <div className="row">
+            <div className="col-md-5 mb-3">
               <Form.Label>Bairro</Form.Label>
               <Form.Control
                 type="text"
@@ -310,10 +313,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-          </div>
-
-          <div className="row">
-            <div className="col-md-4 mb-3">
+            <div className="col-md-5 mb-3">
               <Form.Label>Cidade</Form.Label>
               <Form.Control
                 type="text"
@@ -322,7 +322,7 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-1 mb-3">
+            <div className="col-md-2 mb-3">
               <Form.Label>Estado</Form.Label>
               <Form.Control
                 type="text"
@@ -331,7 +331,10 @@ export const RegisterClientModal: React.FC<RegisterClientModalProps> = ({
                 onChange={handleChange}
               />
             </div>
-            <div className="col-md-4 mb-3">
+          </div>
+
+          <div className="row">
+            <div className="col-md-6 mb-3">
               <Form.Label>E-mail</Form.Label>
               <Form.Control
                 type="email"
