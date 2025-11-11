@@ -82,33 +82,46 @@ export const useClients = () => {
     const carros = clienteExcluindo.carros || [];
     const carro = carros[0];
 
+    setLoading(true);
+
     try {
-      // Deleta carro
-      if (carro?.id_car) {
-        await supabase.from("carros").delete().eq("id_car", carro.id_car);
+      // Remove vínculos dependentes primeiro (se existirem)
+      if (carro) {
+        if (carro.id_car) {
+          const { error: errCar } = await supabase
+            .from("carros")
+            .delete()
+            .eq("id_car", carro.id_car);
+          if (errCar) throw errCar;
+        }
+
+        if (carro.placas?.id_pla) {
+          const { error: errPla } = await supabase
+            .from("placas")
+            .delete()
+            .eq("id_pla", carro.placas.id_pla);
+          if (errPla) throw errPla;
+        }
       }
 
-      // Deleta placa
-      if (carro?.placas?.id_pla) {
-        await supabase
-          .from("placas")
-          .delete()
-          .eq("id_pla", carro.placas.id_pla);
-      }
-
-      // Deleta cliente
-      const { error: errDelete } = await supabase
+      // Remove o cliente
+      const { error: errCliente } = await supabase
         .from("clientes")
         .delete()
         .eq("id_cli", id_cli);
-      if (errDelete) throw errDelete;
 
-      // Atualiza lista
-      fetchClients(currentPage, searchTerm);
-    } catch (error) {
-      console.error("Erro ao excluir cliente:", error);
+      if (errCliente) throw errCliente;
+
+      // Atualiza listagem após a exclusão
+      await fetchClients(currentPage, searchTerm);
+
+      console.info(`Cliente ${id_cli} excluído com sucesso.`);
+    } catch (error: any) {
+      console.error("Erro ao excluir cliente:", error.message || error);
+      alert("Erro ao excluir cliente. Verifique o console para mais detalhes.");
     } finally {
       setClienteExcluindo(null);
+      setLoading(false);
     }
   };
 
